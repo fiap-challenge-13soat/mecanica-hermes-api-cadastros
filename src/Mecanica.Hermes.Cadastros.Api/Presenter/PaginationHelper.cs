@@ -1,4 +1,3 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Domain.Common.Pagination;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -7,12 +6,6 @@ namespace Mecanica.Hermes.Cadastros.Api.Presenter;
 
 public static class PaginationHelper
 {
-    public static PaginatedResponse<TApi> ToPaginatedResponse<TApp, TApi>(
-        this PagedResult<TApp> pagedResult,
-        IMapper mapper,
-        HttpRequest request)
-        => pagedResult.ToPaginatedResponse(item => mapper.Map<TApp, TApi>(item), request);
-
     public static PaginatedResponse<TApi> ToPaginatedResponse<TApp, TApi>(
         this PagedResult<TApp> pagedResult,
         Func<TApp, TApi> map,

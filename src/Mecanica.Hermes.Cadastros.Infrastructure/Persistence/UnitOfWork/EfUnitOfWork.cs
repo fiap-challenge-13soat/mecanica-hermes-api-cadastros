@@ -1,14 +1,13 @@
 using Mecanica.Hermes.Cadastros.Application.Common.Exceptions;
 using Mecanica.Hermes.Cadastros.Application.Common.Persistence;
 using Mecanica.Hermes.Cadastros.Domain.Common.Abstractions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.UnitOfWork;
 
 internal sealed class EfUnitOfWork(
     AppDbContext db,
-    IPublisher publisher) : IUnitOfWork
+    IDomainEventDispatcher domainEventDispatcher) : IUnitOfWork
 {
     private readonly List<IDomainEvent> _pendingEvents = [];
 
@@ -32,14 +31,12 @@ internal sealed class EfUnitOfWork(
                 ex);
         }
 
-        if (_pendingEvents.Count > 0)
-        {
-            var snapshot = _pendingEvents.ToArray();
-            _pendingEvents.Clear();
-            foreach (var evt in snapshot)
-                await publisher.Publish(evt, cancellationToken);
-        }
+        if (_pendingEvents.Count == 0)
+            return rows;
 
+        var snapshot = _pendingEvents.ToArray();
+        _pendingEvents.Clear();
+        await domainEventDispatcher.DispatchAsync(snapshot, cancellationToken);
         return rows;
     }
 }

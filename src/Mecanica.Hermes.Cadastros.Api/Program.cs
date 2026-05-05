@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos;
@@ -26,8 +25,6 @@ if (builder.Environment.EnvironmentName != EnvironmentNames.Testing)
     builder.AddSerilogConfiguration();
 
 builder.Services.ConfigureInfrastructureServices(typeof(IApiAssemblyMarker).Assembly);
-
-builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(IApiAssemblyMarker).Assembly));
 
 builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));

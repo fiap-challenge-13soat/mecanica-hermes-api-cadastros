@@ -1,7 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Dtos;
 using Mecanica.Hermes.Cadastros.Application.Clientes.Queries.ListClientesByNome;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
@@ -25,19 +24,17 @@ public static class ListClientesByNomeRoute
     private static async Task<IResult> ListClientesByNome(
         [FromRoute] string nome,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         HttpRequest request,
         CancellationToken cancellationToken,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var query = new ListClientesByNomeQuery(nome, page, pageSize);
-        var result = await sender.Send(query, cancellationToken);
+        var result = await sender.Send(new ListClientesByNomeQuery(nome, page, pageSize), cancellationToken);
 
         if (result.IsFailure)
             return result.Present();
 
-        var paginatedResponse = result.Data!.ToPaginatedResponse<ClienteDto, ClienteResponse>(mapper, request);
+        var paginatedResponse = result.Data!.ToPaginatedResponse(dto => dto.ToResponse(), request);
         return Results.Ok(paginatedResponse);
     }
 }

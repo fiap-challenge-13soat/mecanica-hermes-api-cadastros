@@ -57,6 +57,7 @@ internal static class ObservabilityConfiguration
             {
                 metrics
                     .AddMeter(ActivitySources.ApplicationName)
+                    .AddMeter(CadastrosMetrics.MeterName)
                     .AddAspNetCoreInstrumentation()
                     .AddNpgsqlInstrumentation()
                     .AddHttpClientInstrumentation()

@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Mecanica.Hermes.Cadastros.Application.Common.Persistence;
+using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Events;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.UnitOfWork;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,8 @@ internal static partial class ServiceCollectionExtensions
     public static void AddEntityFrameworkConfiguration(this IServiceCollection services)
     {
         services.TryAddSingleton(TimeProvider.System);
-        services.AddTransient<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<IDomainEventDispatcher, MediatorDomainEventDispatcher>();
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
         var connectionString = Environment.GetEnvironmentVariable(VariableNames.DefaultConnectionString);
 

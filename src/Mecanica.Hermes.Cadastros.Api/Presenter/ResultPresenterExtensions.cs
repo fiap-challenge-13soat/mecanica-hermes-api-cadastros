@@ -1,5 +1,4 @@
 using System.Net;
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Domain.Common.Results;
 using Microsoft.AspNetCore.Http;
 
@@ -7,12 +6,6 @@ namespace Mecanica.Hermes.Cadastros.Api.Presenter;
 
 public static class ResultPresenterExtensions
 {
-    public static IResult Present<TApp, TApi>(
-        this Result<TApp> result,
-        IMapper mapper,
-        Func<TApi, IResult>? success = null)
-        => result.Present(value => mapper.Map<TApi>(value), success);
-
     /// <summary>
     ///     Mapeia um <see cref="Result{TApp}" /> bem-sucedido para seu contrato de API
     ///     usando a função de conversão fornecida, retornando OK ou um resultado de sucesso customizado.

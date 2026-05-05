@@ -1,8 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Commands.AddCliente;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Dtos;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,16 +23,11 @@ public static class AddClienteRoute
     private static async Task<IResult> AddCliente(
         [FromBody] AddClienteRequest request,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<AddClienteCommand>(request);
-        var response = await sender.Send(command, cancellationToken);
+        var response = await sender.Send(request.ToCommand(), cancellationToken);
 
-        return response.Present<ClienteDto, ClienteResponse>(mapper, r =>
-            Results.CreatedAtRoute(
-                "GetClienteById",
-                new { id = r.Id },
-                r));
+        return response.Present(dto => dto.ToResponse(), r =>
+            Results.CreatedAtRoute("GetClienteById", new { id = r.Id }, r));
     }
 }

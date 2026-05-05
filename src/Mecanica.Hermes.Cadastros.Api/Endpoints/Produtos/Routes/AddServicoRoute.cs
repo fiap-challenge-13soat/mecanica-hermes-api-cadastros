@@ -1,8 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Produtos.Commands.AddServico;
-using Mecanica.Hermes.Cadastros.Application.Produtos.Dtos;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,7 @@ public static class AddServicoRoute
     {
         endpoints.MapPost("/", AddServico)
             .WithName("AddServico")
-            .Produces(statusCode: StatusCodes.Status201Created)
+            .Produces<ServicoResponse>(statusCode: StatusCodes.Status201Created)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status400BadRequest)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status500InternalServerError)
             .RequireAuthorization(AuthPolicies.OnlyAdminScope)
@@ -25,16 +23,11 @@ public static class AddServicoRoute
     private static async Task<IResult> AddServico(
         [FromBody] AddServicoRequest request,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        var command = mapper.Map<AddServicoCommand>(request);
-        var response = await sender.Send(command, cancellationToken);
+        var response = await sender.Send(request.ToCommand(), cancellationToken);
 
-        return response.Present<ServicoDto, ServicoResponse>(mapper, r =>
-            Results.CreatedAtRoute(
-                "GetServicoById",
-                new { id = r.Id },
-                r));
+        return response.Present(dto => dto.ToResponse(), r =>
+            Results.CreatedAtRoute("GetServicoById", new { id = r.Id }, r));
     }
 }

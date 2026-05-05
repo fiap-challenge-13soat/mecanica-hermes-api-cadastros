@@ -1,7 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Produtos.Dtos;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Queries.ListProdutosByDescricao;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
@@ -25,19 +24,17 @@ public static class ListProdutosByDescricaoRoute
     private static async Task<IResult> ListProdutosByDescricao(
         [FromRoute] string descricao,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         HttpRequest request,
         CancellationToken cancellationToken,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        var query = new ListProdutosByDescricaoQuery(descricao, page, pageSize);
-        var result = await sender.Send(query, cancellationToken);
-        
+        var result = await sender.Send(new ListProdutosByDescricaoQuery(descricao, page, pageSize), cancellationToken);
+
         if (result.IsFailure)
             return result.Present();
 
-        var paginatedResponse = result.Data!.ToPaginatedResponse<ProdutoDto, ProdutoResponse>(mapper, request);
+        var paginatedResponse = result.Data!.ToPaginatedResponse(dto => dto.ToResponse(), request);
         return Results.Ok(paginatedResponse);
     }
 }

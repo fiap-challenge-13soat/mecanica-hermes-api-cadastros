@@ -1,8 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Produtos.Commands.UpdateServico;
-using Mecanica.Hermes.Cadastros.Application.Produtos.Dtos;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,7 @@ public static class UpdateServicoRoute
     {
         endpoints.MapPut("/{id:guid}", UpdateServico)
             .WithName("UpdateServico")
-            .Produces(statusCode: StatusCodes.Status202Accepted)
+            .Produces<ServicoResponse>(statusCode: StatusCodes.Status200OK)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status400BadRequest)
             .Produces(statusCode: StatusCodes.Status404NotFound)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status500InternalServerError)
@@ -27,12 +25,9 @@ public static class UpdateServicoRoute
         [FromRoute] Guid id,
         [FromBody] UpdateServicoRequest request,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateServicoCommand(id, request.Descricao, request.Valor);
-        var response = await sender.Send(command, cancellationToken);
-
-        return response.Present<ServicoDto, ServicoResponse>(mapper);
+        var response = await sender.Send(request.ToCommand(id), cancellationToken);
+        return response.Present(dto => dto.ToResponse());
     }
 }

@@ -1,8 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Commands.UpdateVeiculo;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Dtos;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +13,12 @@ public static class UpdateVeiculoRoute
     {
         endpoints.MapPut("/veiculos/{clienteId:guid}/{veiculoId:guid}", UpdateVeiculo)
             .WithName("UpdateVeiculo")
-            .Produces(statusCode: StatusCodes.Status202Accepted)
+            .Produces<ClienteResponse>(statusCode: StatusCodes.Status200OK)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status400BadRequest)
             .Produces(statusCode: StatusCodes.Status404NotFound)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status500InternalServerError)
             .RequireAuthorization(AuthPolicies.OnlyAdminScope)
-            .WithDescription("Cria um novo veículo para o cliente");
+            .WithDescription("Atualiza um veículo do cliente");
     }
 
     private static async Task<IResult> UpdateVeiculo(
@@ -28,17 +26,9 @@ public static class UpdateVeiculoRoute
         [FromRoute] Guid veiculoId,
         [FromBody] UpdateVeiculoRequest request,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        var command = new UpdateVeiculoCommand(
-            clienteId,
-            veiculoId,
-            request.Modelo,
-            request.Marca,
-            request.Ano);
-        var response = await sender.Send(command, cancellationToken);
-
-        return response.Present<ClienteDto, ClienteResponse>(mapper);
+        var response = await sender.Send(request.ToCommand(clienteId, veiculoId), cancellationToken);
+        return response.Present(dto => dto.ToResponse());
     }
 }

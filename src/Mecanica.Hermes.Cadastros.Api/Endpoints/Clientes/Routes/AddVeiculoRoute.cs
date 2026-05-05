@@ -1,8 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Commands.AddVeiculo;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Dtos;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,7 @@ public static class AddVeiculoRoute
     {
         endpoints.MapPost("/{id:guid}/veiculos", AddVeiculo)
             .WithName("AddVeiculo")
-            .Produces(statusCode: StatusCodes.Status201Created)
+            .Produces<ClienteResponse>(statusCode: StatusCodes.Status201Created)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status400BadRequest)
             .Produces(statusCode: StatusCodes.Status404NotFound)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status500InternalServerError)
@@ -27,16 +25,11 @@ public static class AddVeiculoRoute
         [FromRoute] Guid id,
         [FromBody] AddVeiculoRequest request,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        var command = new AddVeiculoCommand(id, request.Modelo, request.Marca, request.Placa, request.Ano);
-        var response = await sender.Send(command, cancellationToken);
+        var response = await sender.Send(request.ToCommand(id), cancellationToken);
 
-        return response.Present<ClienteDto, ClienteResponse>(mapper, r =>
-            Results.CreatedAtRoute(
-                "GetClienteById",
-                new { id = r.Id },
-                r));
+        return response.Present(dto => dto.ToResponse(), r =>
+            Results.CreatedAtRoute("GetClienteById", new { id = r.Id }, r));
     }
 }

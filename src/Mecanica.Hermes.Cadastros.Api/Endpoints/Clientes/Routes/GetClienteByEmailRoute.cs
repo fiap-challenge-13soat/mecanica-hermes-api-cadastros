@@ -1,7 +1,6 @@
-using AutoMapper;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Contracts;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Application.Clientes.Dtos;
 using Mecanica.Hermes.Cadastros.Application.Clientes.Queries.GetClienteByEmail;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;
@@ -26,10 +25,9 @@ public static class GetClienteByEmailRoute
     private static async Task<IResult> GetClienteByEmail(
         [FromRoute] string email,
         [FromServices] ISender sender,
-        [FromServices] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var response = await sender.Send(new GetClienteByEmailQuery(email), cancellationToken);
-        return response.Present<ClienteDto, ClienteResponse>(mapper);
+        return response.Present(dto => dto.ToResponse());
     }
 }
