@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" />
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="Moq" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Mecanica.Hermes.Cadastros.Infrastructure\Mecanica.Hermes.Cadastros.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Mecanica.Hermes.Cadastros.Application\Mecanica.Hermes.Cadastros.Application.csproj" />
+        <ProjectReference Include="..\..\src\Mecanica.Hermes.Cadastros.Domain\Mecanica.Hermes.Cadastros.Domain.csproj" />
+        <ProjectReference Include="..\Mecanica.Hermes.Cadastros.TestUtils\Mecanica.Hermes.Cadastros.TestUtils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+        <Using Include="FluentAssertions" />
+        <Using Include="Moq" />
+    </ItemGroup>
+
+</Project>
