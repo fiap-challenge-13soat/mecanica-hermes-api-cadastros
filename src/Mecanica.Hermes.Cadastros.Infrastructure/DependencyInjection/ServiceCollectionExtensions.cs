@@ -88,6 +88,21 @@ public static class ServiceCollectionExtensions
                         return scopes.Contains(AuthPolicies.OnlyAdminScope);
                     });
                 });
+            })
+            .AddPolicy(AuthPolicies.AllowServicoOrAdminScopePolicyName, policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireAssertion(context =>
+                {
+                    var scopeClaims = context.User.FindAll("scope");
+                    return scopeClaims.Any(scopeClaim =>
+                    {
+                        var scopes = scopeClaim.Value
+                            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        return scopes.Contains(AuthPolicies.OnlyAdminScope) ||
+                               scopes.Contains(AuthPolicies.AllowServicoScope);
+                    });
+                });
             });
     }
 }

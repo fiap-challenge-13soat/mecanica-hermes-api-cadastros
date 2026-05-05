@@ -18,7 +18,7 @@ public static class GetClienteByIdRoute
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status400BadRequest)
             .Produces(statusCode: StatusCodes.Status404NotFound)
             .Produces<ApiProblemDetails>(statusCode: StatusCodes.Status500InternalServerError)
-            .RequireAuthorization(AuthPolicies.OnlyAdminScope)
+            .RequireAuthorization(AuthPolicies.AllowServicoOrAdminScopePolicyName)
             .WithDescription("Retorna os dados do cliente pelo seu id");
     }
 

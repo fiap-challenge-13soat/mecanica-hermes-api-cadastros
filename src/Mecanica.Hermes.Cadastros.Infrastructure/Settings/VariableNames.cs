@@ -8,6 +8,7 @@ internal static class VariableNames
     public const string AuthIssuer = "AUTH__ISSUER";
     public const string AuthClienteScope = "AUTH__CLIENTE_SCOPE";
     public const string AuthAdminScope = "AUTH__ADMIN_SCOPE";
+    public const string AuthServicoScope = "AUTH__SERVICO_SCOPE";
     public const string ObservabilityEnabled = "OBSERVABILITY__ENABLED";
 
     public const string OtelServiceName = "OTEL_SERVICE_NAME";
