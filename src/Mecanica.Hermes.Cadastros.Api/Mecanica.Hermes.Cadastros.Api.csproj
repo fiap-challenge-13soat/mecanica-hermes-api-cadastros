@@ -19,4 +19,9 @@
         <ProjectReference Include="..\Mecanica.Hermes.Cadastros.Infrastructure\Mecanica.Hermes.Cadastros.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Api.Tests" />
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.IntegrationTests" />
+    </ItemGroup>
+
 </Project>

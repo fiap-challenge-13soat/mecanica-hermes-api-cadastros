@@ -10,4 +10,10 @@
         <PackageReference Include="MediatR" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Domain.Tests" />
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Application.Tests" />
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Infrastructure.Tests" />
+    </ItemGroup>
+
 </Project>

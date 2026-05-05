@@ -4,23 +4,25 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Notificacoes;
 
 /// <summary>
-///     Default builder das URLs de aprovação/rejeição. Por enquanto aponta para a rota
-///     pública <c>/api/webhooks/orcamentos/{id}/(aprovar|rejeitar)</c> desta API — o
-///     endpoint real será implementado na Fase 4 (WebHook com HMAC + idempotência).
+///     Constrói as URLs <c>/api/webhooks/orcamentos/{id}/(aprovar|rejeitar)</c>
+///     anexando token HMAC + timestamp. As URLs são consumidas pelos botões dos
+///     e-mails enviados ao cliente.
 /// </summary>
-internal sealed class NotificacoesUrlBuilder : INotificacoesUrlBuilder
+internal sealed class NotificacoesUrlBuilder(IWebhookTokenSigner tokenSigner) : INotificacoesUrlBuilder
 {
-    private readonly string _baseUrl;
+    private const string AcaoAprovar = "aprovar";
+    private const string AcaoRejeitar = "rejeitar";
 
-    public NotificacoesUrlBuilder()
+    private readonly string _baseUrl =
+        (Environment.GetEnvironmentVariable(VariableNames.AppBaseUrl) ?? "http://localhost:5000").TrimEnd('/');
+
+    public string BuildAprovacaoUrl(Guid ordemDeServicoId) => Build(ordemDeServicoId, AcaoAprovar);
+
+    public string BuildRejeicaoUrl(Guid ordemDeServicoId) => Build(ordemDeServicoId, AcaoRejeitar);
+
+    private string Build(Guid ordemDeServicoId, string acao)
     {
-        _baseUrl = (Environment.GetEnvironmentVariable(VariableNames.AppBaseUrl) ?? "http://localhost:5000")
-            .TrimEnd('/');
+        var (token, ts) = tokenSigner.Sign(ordemDeServicoId, acao);
+        return $"{_baseUrl}/api/webhooks/orcamentos/{ordemDeServicoId:D}/{acao}?token={token}&ts={ts}";
     }
-
-    public string BuildAprovacaoUrl(Guid ordemDeServicoId) =>
-        $"{_baseUrl}/api/webhooks/orcamentos/{ordemDeServicoId:D}/aprovar";
-
-    public string BuildRejeicaoUrl(Guid ordemDeServicoId) =>
-        $"{_baseUrl}/api/webhooks/orcamentos/{ordemDeServicoId:D}/rejeitar";
 }
