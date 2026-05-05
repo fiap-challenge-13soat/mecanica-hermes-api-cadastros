@@ -10,5 +10,6 @@ public static class NotificacoesEndpoints
             .WithTags("Notificacoes");
 
         group.MapEnviarOrcamentoParaAprovacao();
+        group.MapEnviarLinkPagamento();
     }
 }

@@ -32,7 +32,9 @@ internal static class VariableNames
     public const string MassTransitQueueNamePrefix = "MASSTRANSIT__QUEUE_NAME_PREFIX";
 
     public const string OrdemServicoApiBaseUrl = "ORDEM_SERVICO_API__BASE_URL";
+    public const string PagamentoApiBaseUrl = "PAGAMENTO_API__BASE_URL";
     public const string AppBaseUrl = "APP__BASE_URL";
+    public const string WebhookSigningSecret = "WEBHOOK__SIGNING_SECRET";
 
     public const string RunMigrationsOnStartup = "RUN_MIGRATIONS_ON_STARTUP";
 }

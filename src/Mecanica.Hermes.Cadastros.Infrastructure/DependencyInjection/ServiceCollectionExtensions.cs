@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
     public static void ConfigureInfrastructureServices(this IServiceCollection services, Assembly apiAssemblyMarker)
     {
         services.AddSingleton<CadastrosMetrics>();
+        services.AddSingleton<IWebhookTokenSigner, HmacWebhookTokenSigner>();
         services.AddSingleton<INotificacoesUrlBuilder, NotificacoesUrlBuilder>();
 
         services.AddEntityFrameworkConfiguration();

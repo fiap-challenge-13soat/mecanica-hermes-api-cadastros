@@ -10,6 +10,7 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
     public DbSet<VeiculoEntity> Veiculos => Set<VeiculoEntity>();
     public DbSet<ProdutoEntity> Produtos => Set<ProdutoEntity>();
     public DbSet<ServicoEntity> Servicos => Set<ServicoEntity>();
+    public DbSet<WebhookEventEntity> WebhookEvents => Set<WebhookEventEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -19,13 +19,25 @@ internal static class HttpClientsServiceCollectionExtensions
                 client.BaseAddress = new Uri(baseUrl);
                 client.Timeout = TimeSpan.FromSeconds(30);
             })
-            .AddStandardResilienceHandler(options =>
+            .AddStandardResilienceHandler(ConfigureResilience);
+
+        services.AddHttpClient<IPagamentoApiClient, PagamentoApiClient>(client =>
             {
-                options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(15);
-                options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
-                options.Retry.MaxRetryAttempts = 3;
-            });
+                var baseUrl = Environment.GetEnvironmentVariable(VariableNames.PagamentoApiBaseUrl)
+                              ?? throw new InvalidOperationException(
+                                  $"{VariableNames.PagamentoApiBaseUrl} é obrigatória para acionar a API de Pagamentos.");
+                client.BaseAddress = new Uri(baseUrl);
+                client.Timeout = TimeSpan.FromSeconds(30);
+            })
+            .AddStandardResilienceHandler(ConfigureResilience);
 
         return services;
+    }
+
+    private static void ConfigureResilience(HttpStandardResilienceOptions options)
+    {
+        options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(15);
+        options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
+        options.Retry.MaxRetryAttempts = 3;
     }
 }

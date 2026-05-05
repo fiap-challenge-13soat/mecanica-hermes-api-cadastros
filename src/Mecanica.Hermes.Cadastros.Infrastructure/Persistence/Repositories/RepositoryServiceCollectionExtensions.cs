@@ -1,4 +1,5 @@
 using Mecanica.Hermes.Cadastros.Application.Clientes.Ports;
+using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Ports;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,7 @@ internal static class RepositoryServiceCollectionExtensions
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IProdutoRepository, ProdutoRepository>();
         services.AddScoped<IServicoRepository, ServicoRepository>();
+        services.AddScoped<IWebhookEventRepository, WebhookEventRepository>();
         return services;
     }
 }

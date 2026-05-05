@@ -32,6 +32,9 @@ tests/
 - `GET/POST/PUT/DELETE /api/produtos`
 - `GET/POST/PUT/DELETE /api/servicos`
 - `POST /api/notificacoes/orcamento/{ordemServicoId}/enviar-aprovacao`
+- `POST /api/notificacoes/pagamento/{pagamentoId}/enviar-link`
+- `GET /api/webhooks/orcamentos/{ordemDeServicoId}/aprovar?token=&ts=` (público, HMAC)
+- `GET /api/webhooks/orcamentos/{ordemDeServicoId}/rejeitar?token=&ts=&motivo=` (público, HMAC)
 - `GET /healthz/live`, `GET /healthz/ready`, `GET /health`
 - `GET /scalar/v1` (UI OpenAPI)
 
@@ -82,7 +85,9 @@ Acesse a UI em `http://localhost:5xxx/scalar/v1`.
 | `MASSTRANSIT__CONNECTION_STRING` | — | URI AMQP (obrigatório quando RabbitMq) |
 | `MASSTRANSIT__QUEUE_NAME_PREFIX` | `mecanica-hermes-cadastros` | Prefixo das filas |
 | `ORDEM_SERVICO_API__BASE_URL` | (obrigatório p/ Fase 2) | Base URL da API de Ordem de Serviço |
+| `PAGAMENTO_API__BASE_URL` | (obrigatório p/ Fase 3) | Base URL da API de Pagamentos |
 | `APP__BASE_URL` | `http://localhost:5000` | Base URL pública desta API (links nos e-mails) |
+| `WEBHOOK__SIGNING_SECRET` | (obrigatório p/ Fase 4) | Segredo HMAC para assinar/validar links Aprovar/Rejeitar |
 
 ## Migrations
 
@@ -122,5 +127,5 @@ docker run --rm -p 8080:8080 \
 - ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit).
 - ✅ **Fase 1.1 (refactor)** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter.
 - ✅ **Fase 2** — Endpoint REST e Consumer para envio de orçamento ao cliente (integração com a API de Ordem de Serviço).
-- ⏳ **Fase 3** — Endpoint REST e Consumer para envio de link de pagamento (integração com a API de Pagamentos).
-- ⏳ **Fase 4** — WebHook público para receber a aprovação/rejeição do orçamento (assinatura HMAC + idempotência + publish no bus, padrão da API de Pagamentos).
+- ✅ **Fase 3** — Endpoint REST e Consumer para envio de link de pagamento (integração com a API de Pagamentos).
+- ✅ **Fase 4** — WebHook público para receber a aprovação/rejeição do orçamento (HMAC SHA-256 + idempotência via tabela `WebhookEvents` + publish de `OrcamentoAprovadoPeloClienteEvent`/`OrcamentoRejeitadoPeloClienteEvent` para a API de OS consumir).

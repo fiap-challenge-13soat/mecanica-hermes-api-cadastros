@@ -5,6 +5,7 @@ using Mecanica.Hermes.Cadastros.Api;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Notificacoes;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Webhooks;
 using Mecanica.Hermes.Cadastros.Api.Middleware;
 using Mecanica.Hermes.Cadastros.Domain.Common;
 using Mecanica.Hermes.Cadastros.Infrastructure.DependencyInjection;
@@ -141,6 +142,7 @@ app.MapClientesEndpoints();
 app.MapProdutosEndpoints();
 app.MapServicosEndpoints();
 app.MapNotificacoesEndpoints();
+app.MapWebhooksEndpoints();
 
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();

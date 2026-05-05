@@ -27,6 +27,7 @@ internal static class MessagingServiceCollectionExtensions
             x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: queuePrefix, includeNamespace: false));
             x.AddConsumer<EnviarEmailConsumer>();
             x.AddConsumer<OrdemDeServicoAguardandoAprovacaoConsumer>();
+            x.AddConsumer<LinkPagamentoGeradoConsumer>();
 
             x.ConfigureHealthCheckOptions(opts =>
             {

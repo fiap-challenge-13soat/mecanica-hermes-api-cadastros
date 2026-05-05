@@ -213,6 +213,38 @@ namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Migrations
                     b.ToTable("Veiculos", (string)null);
                 });
 
+            modelBuilder.Entity("Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Entities.WebhookEventEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("ReceivedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Scope", "ExternalId")
+                        .IsUnique();
+
+                    b.ToTable("WebhookEvents", (string)null);
+                });
+
             modelBuilder.Entity("Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Entities.VeiculoEntity", b =>
                 {
                     b.HasOne("Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Entities.ClienteEntity", "Cliente")
