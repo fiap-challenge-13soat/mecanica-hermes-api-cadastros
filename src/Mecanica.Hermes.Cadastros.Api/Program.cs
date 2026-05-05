@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using Mecanica.Hermes.Cadastros.Api;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes;
+using Mecanica.Hermes.Cadastros.Api.Endpoints.Notificacoes;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos;
 using Mecanica.Hermes.Cadastros.Api.Middleware;
 using Mecanica.Hermes.Cadastros.Domain.Common;
@@ -139,6 +140,7 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 app.MapClientesEndpoints();
 app.MapProdutosEndpoints();
 app.MapServicosEndpoints();
+app.MapNotificacoesEndpoints();
 
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();

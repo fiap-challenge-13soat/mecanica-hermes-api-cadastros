@@ -31,5 +31,8 @@ internal static class VariableNames
     public const string MassTransitConnectionString = "MASSTRANSIT__CONNECTION_STRING";
     public const string MassTransitQueueNamePrefix = "MASSTRANSIT__QUEUE_NAME_PREFIX";
 
+    public const string OrdemServicoApiBaseUrl = "ORDEM_SERVICO_API__BASE_URL";
+    public const string AppBaseUrl = "APP__BASE_URL";
+
     public const string RunMigrationsOnStartup = "RUN_MIGRATIONS_ON_STARTUP";
 }

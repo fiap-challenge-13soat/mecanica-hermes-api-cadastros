@@ -40,6 +40,13 @@ public class Result(HttpStatusCode statusCode)
     {
         return new Result(HttpStatusCode.NotFound);
     }
+
+    public static Result NotFound(string errorMessage)
+    {
+        var result = new Result(HttpStatusCode.NotFound);
+        result.Errors.Add(errorMessage);
+        return result;
+    }
 }
 
 public class Result<TValue>(HttpStatusCode statusCode, TValue? data = default) : Result(statusCode)

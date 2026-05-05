@@ -6,8 +6,8 @@ Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos*
 
 - **.NET 10** (Minimal APIs)
 - **PostgreSQL 18** + **EF Core 10**
-- **MediatR** (CQRS) + **AutoMapper** + **Serilog** + **OpenTelemetry**
-- **MailKit** (SMTP)
+- **MediatR** (CQRS) + **MapperExtensions** estáticos + **Serilog** + **OpenTelemetry**
+- **MailKit** (SMTP) + **MassTransit** (RabbitMQ ou in-memory)
 - **Scalar** (UI OpenAPI)
 - **xUnit** + **Testcontainers** + **NetArchTest**
 
@@ -31,6 +31,7 @@ tests/
 - `GET/POST/PUT/DELETE /api/clientes` (com sub-rotas `/{id}/veiculos`)
 - `GET/POST/PUT/DELETE /api/produtos`
 - `GET/POST/PUT/DELETE /api/servicos`
+- `POST /api/notificacoes/orcamento/{ordemServicoId}/enviar-aprovacao`
 - `GET /healthz/live`, `GET /healthz/ready`, `GET /health`
 - `GET /scalar/v1` (UI OpenAPI)
 
@@ -77,6 +78,11 @@ Acesse a UI em `http://localhost:5xxx/scalar/v1`.
 | `CORS_ALLOWED_ORIGINS` | (prod) | CSV de origens permitidas |
 | `OBSERVABILITY__ENABLED` | `false` | Liga OTel exporter |
 | `OTEL_EXPORTER_OTLP_*` | — | Configuração padrão OTel |
+| `MASSTRANSIT__TRANSPORT_SERVICE` | (vazio = in-memory) | `RabbitMq` para usar broker real |
+| `MASSTRANSIT__CONNECTION_STRING` | — | URI AMQP (obrigatório quando RabbitMq) |
+| `MASSTRANSIT__QUEUE_NAME_PREFIX` | `mecanica-hermes-cadastros` | Prefixo das filas |
+| `ORDEM_SERVICO_API__BASE_URL` | (obrigatório p/ Fase 2) | Base URL da API de Ordem de Serviço |
+| `APP__BASE_URL` | `http://localhost:5000` | Base URL pública desta API (links nos e-mails) |
 
 ## Migrations
 
@@ -104,10 +110,17 @@ docker run --rm -p 8080:8080 \
   mecanica-hermes-cadastros:dev
 ```
 
+## Mensageria & métricas
+
+- MassTransit configurado **sem SAGA** (este serviço só usa o bus para fluxos de notificação por e-mail).
+- `EnviarEmailCommand` é publicado por handlers de notificação e consumido por `EnviarEmailConsumer`, que delega ao `IEmailSenderService` (MailKit).
+- `OrdemDeServicoAguardandoAprovacaoConsumer` escuta a exchange `ordem-de-servico.aguardando-aprovacao` (publicada pela API de OS) e dispara o mesmo command que o endpoint REST de envio de orçamento.
+- Métricas OTel: meter `Mecanica.Hermes.Cadastros` com counters em cada Domain Event (cliente.criado, produto.criado, etc.). Despachadas in-process pelo `IDomainEventDispatcher` após cada `CommitAsync` do `EfUnitOfWork` — sem Outbox, decisão deliberada (best-effort + zero overhead transacional).
+
 ## Roadmap
 
-Esta entrega é a **Fase 1** do microsserviço (CRUD + serviço de e-mail). Ainda virão:
-
-- **Fase 2** — Endpoint REST e Consumer para envio de orçamento ao cliente (integração com a API de Ordem de Serviço)
-- **Fase 3** — Endpoint REST e Consumer para envio de link de pagamento (integração com a API de Pagamentos)
-- **Fase 4** — WebHook público para receber a aprovação/rejeição do orçamento (assinatura HMAC + idempotência + publish no bus, padrão da API de Pagamentos)
+- ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit).
+- ✅ **Fase 1.1 (refactor)** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter.
+- ✅ **Fase 2** — Endpoint REST e Consumer para envio de orçamento ao cliente (integração com a API de Ordem de Serviço).
+- ⏳ **Fase 3** — Endpoint REST e Consumer para envio de link de pagamento (integração com a API de Pagamentos).
+- ⏳ **Fase 4** — WebHook público para receber a aprovação/rejeição do orçamento (assinatura HMAC + idempotência + publish no bus, padrão da API de Pagamentos).
