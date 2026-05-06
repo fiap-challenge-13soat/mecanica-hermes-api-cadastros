@@ -40,7 +40,7 @@
 
 **Exemplo:**
 ```csharp
-[EntityName("orcamento.aprovado-pelo-cliente")]
+[EntityName("orcamento.aprovado-pelo-cliente.v1")]
 public sealed record OrcamentoAprovadoPeloClienteEvent(Guid OrdemDeServicoId, DateTime AprovadoEm);
 ```
 

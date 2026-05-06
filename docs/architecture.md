@@ -64,7 +64,7 @@ graph LR
     Cliente -->|"GET /webhooks/.../aprovar"| Cad
     Cad -->|"OrcamentoAprovadoPeloClienteEvent"| OS
 
-    Pag[API Pagamentos] -->|"pagamento.link-gerado"| Cad
+    Pag[API Pagamentos] -->|"pagamento.link-gerado.v1"| Cad
     Cad -->|"consulta Pagamentos"| Pag
     Cad -->|"e-mail com link"| Cliente
 ```

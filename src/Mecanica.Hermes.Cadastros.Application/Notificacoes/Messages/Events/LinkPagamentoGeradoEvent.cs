@@ -13,5 +13,5 @@ namespace Mecanica.Hermes.Cadastros.Application.Notificacoes.Messages.Events;
 ///         abaixo para que o roteamento bata neste consumer sem outras alterações.
 ///     </para>
 /// </summary>
-[EntityName("pagamento.link-gerado")]
+[EntityName("pagamento.link-gerado.v1")]
 public sealed record LinkPagamentoGeradoEvent(Guid PagamentoId);

@@ -7,5 +7,5 @@ namespace Mecanica.Hermes.Cadastros.Application.Notificacoes.Messages.Events;
 ///     Consumido pela API de Ordem de Serviço para promover o status da OS para
 ///     <c>Rejeitada</c>.
 /// </summary>
-[EntityName("orcamento.rejeitado-pelo-cliente")]
+[EntityName("orcamento.rejeitado-pelo-cliente.v1")]
 public sealed record OrcamentoRejeitadoPeloClienteEvent(Guid OrdemDeServicoId, DateTime RejeitadoEm, string? Motivo);

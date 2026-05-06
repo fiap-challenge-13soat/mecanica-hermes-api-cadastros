@@ -21,8 +21,8 @@ Não há orquestração interna — o fluxo é linear: evento recebido → comma
 
 | EntityName | Publicador | Consumer | Ação |
 | --- | --- | --- | --- |
-| `ordem-de-servico.aguardando-aprovacao` | API de OS | `OrdemDeServicoAguardandoAprovacaoConsumer` | Dispara `EnviarOrcamentoParaAprovacaoCommand` — busca dados da OS e envia e-mail com links de aprovação/rejeição |
-| `pagamento.link-gerado` | API de Pagamentos | `LinkPagamentoGeradoConsumer` | Dispara `EnviarLinkPagamentoCommand` — busca dados do pagamento e envia e-mail com o link ao cliente |
+| `ordem-de-servico.aguardando-aprovacao.v1` | API de OS | `OrdemDeServicoAguardandoAprovacaoConsumer` | Dispara `EnviarOrcamentoParaAprovacaoCommand` — busca dados da OS e envia e-mail com links de aprovação/rejeição |
+| `pagamento.link-gerado.v1` | API de Pagamentos | `LinkPagamentoGeradoConsumer` | Dispara `EnviarLinkPagamentoCommand` — busca dados do pagamento e envia e-mail com o link ao cliente |
 
 ### Detalhe do fluxo — orçamento
 
@@ -54,8 +54,8 @@ O `LinkPagamentoGeradoConsumer` segue o mesmo padrão, consultando `IPagamentoAp
 
 | EntityName | Evento | Gatilho | Payload |
 | --- | --- | --- | --- |
-| `orcamento.aprovado-pelo-cliente` | `OrcamentoAprovadoPeloClienteEvent` | `GET /api/webhooks/orcamentos/{id}/aprovar?token=&ts=` | `OrdemDeServicoId`, `AprovadoEm` |
-| `orcamento.rejeitado-pelo-cliente` | `OrcamentoRejeitadoPeloClienteEvent` | `GET /api/webhooks/orcamentos/{id}/rejeitar?token=&ts=&motivo=` | `OrdemDeServicoId`, `RejeitadoEm`, `Motivo?` |
+| `orcamento.aprovado-pelo-cliente.v1` | `OrcamentoAprovadoPeloClienteEvent` | `GET /api/webhooks/orcamentos/{id}/aprovar?token=&ts=` | `OrdemDeServicoId`, `AprovadoEm` |
+| `orcamento.rejeitado-pelo-cliente.v1` | `OrcamentoRejeitadoPeloClienteEvent` | `GET /api/webhooks/orcamentos/{id}/rejeitar?token=&ts=&motivo=` | `OrdemDeServicoId`, `RejeitadoEm`, `Motivo?` |
 
 A publicação usa `IPublishEndpoint.Publish(new OrcamentoAprovadoPeloClienteEvent(...))` diretamente no handler do endpoint de webhook, **após** a validação HMAC e o registro de idempotência na tabela `webhook_events`.
 

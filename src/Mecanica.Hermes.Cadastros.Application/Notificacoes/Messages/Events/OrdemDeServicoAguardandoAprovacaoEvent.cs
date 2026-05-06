@@ -14,5 +14,5 @@ namespace Mecanica.Hermes.Cadastros.Application.Notificacoes.Messages.Events;
 ///         corretamente para esta fila.
 ///     </para>
 /// </summary>
-[EntityName("ordem-de-servico.aguardando-aprovacao")]
+[EntityName("ordem-de-servico.aguardando-aprovacao.v1")]
 public sealed record OrdemDeServicoAguardandoAprovacaoEvent(Guid OrdemDeServicoId);
