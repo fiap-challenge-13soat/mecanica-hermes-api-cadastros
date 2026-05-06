@@ -1,6 +1,12 @@
 # Mecânica Hermes — API de Cadastros
 
-Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos**) e de **Produtos** / **Serviços**, além do envio de **e-mails** ao cliente via MailKit. Faz parte da decomposição da API monolítica original em três microsserviços (junto com `mecanica-hermes-api-ordem-servico` e `mecanica-hermes-api-pagamentos`).
+Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos**) e de **Produtos** / **Serviços**, além do envio de **e-mails** ao cliente via MailKit e do **webhook** de aprovação/rejeição de orçamento. Faz parte do ecossistema composto por três microsserviços:
+
+| Serviço | Repositório |
+| --- | --- |
+| **Cadastros** (este) | `mecanica-hermes-cadastros` |
+| Ordem de Serviço | `mecanica-hermes-api-ordem-servico` |
+| Pagamentos | `mecanica-hermes-api-pagamentos` |
 
 ## Stack
 
@@ -26,76 +32,27 @@ tests/
   Mecanica.Hermes.Cadastros.TestUtils/
 ```
 
-## Endpoints (resumo)
-
-- `GET/POST/PUT/DELETE /api/clientes` (com sub-rotas `/{id}/veiculos`)
-- `GET/POST/PUT/DELETE /api/produtos`
-- `GET/POST/PUT/DELETE /api/servicos`
-- `POST /api/notificacoes/orcamento/{ordemServicoId}/enviar-aprovacao`
-- `POST /api/notificacoes/pagamento/{pagamentoId}/enviar-link`
-- `GET /api/webhooks/orcamentos/{ordemDeServicoId}/aprovar?token=&ts=` (público, HMAC)
-- `GET /api/webhooks/orcamentos/{ordemDeServicoId}/rejeitar?token=&ts=&motivo=` (público, HMAC)
-- `GET /healthz/live`, `GET /healthz/ready`, `GET /health`
-- `GET /scalar/v1` (UI OpenAPI)
-
-A documentação completa fica disponível na UI Scalar quando a aplicação está rodando.
-
-## Quickstart local
+## Início rápido
 
 ```bash
-# Subir Postgres
+# 1. Subir PostgreSQL
 docker run -d --name pg-cadastros -p 5432:5432 \
   -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_DB=mecanica_hermes_cadastros \
   postgres:18.1
 
-# Configurar variáveis mínimas
+# 2. Configurar variáveis mínimas
 export ConnectionStrings__DefaultConnection="Host=localhost;Database=mecanica_hermes_cadastros;Username=postgres;Password=postgres"
 export AUTH__AUTHORITY=https://test
 export AUTH__ISSUER=https://test
-export EmailSender__Enabled=false   # desabilita SMTP em dev
+export EmailSender__Enabled=false
+export WEBHOOK__SIGNING_SECRET=meu-segredo-de-32-bytes-ou-mais-aqui
 
-# Build + Run (a migration é aplicada no startup)
+# 3. Executar (migrations aplicadas no startup)
 dotnet run --project src/Mecanica.Hermes.Cadastros.Api
 ```
 
-Acesse a UI em `http://localhost:5xxx/scalar/v1`.
-
-## Variáveis de ambiente
-
-| Variável | Default | Descrição |
-| --- | --- | --- |
-| `ConnectionStrings__DefaultConnection` | (obrigatório) | Connection string do PostgreSQL |
-| `AUTH__AUTHORITY` | (obrigatório) | OIDC authority |
-| `AUTH__ISSUER` | (obrigatório) | JWT issuer esperado |
-| `AUTH__CLIENTE_SCOPE` | `cliente-scope` | Escopo de leitura |
-| `AUTH__ADMIN_SCOPE` | `admin-scope` | Escopo de mutação |
-| `EmailSender__Enabled` | `false` | Liga/desliga envio SMTP |
-| `EmailSender__SmtpServer` | — | Host SMTP |
-| `EmailSender__SmtpPort` | `25` | Porta SMTP |
-| `EmailSender__SslRequired` | `false` | TLS no SMTP |
-| `EmailSender__UserName` / `__Password` | — | Credenciais SMTP (opcional) |
-| `EmailSender__SenderInformation__Name` / `__Address` | — | Remetente |
-| `RUN_MIGRATIONS_ON_STARTUP` | `true` | Aplica migrations no boot |
-| `RATE_LIMIT_PERMIT_PER_MINUTE` | `60` | Rate limit por IP |
-| `CORS_ALLOWED_ORIGINS` | (prod) | CSV de origens permitidas |
-| `OBSERVABILITY__ENABLED` | `false` | Liga OTel exporter |
-| `OTEL_EXPORTER_OTLP_*` | — | Configuração padrão OTel |
-| `MASSTRANSIT__TRANSPORT_SERVICE` | (vazio = in-memory) | `RabbitMq` para usar broker real |
-| `MASSTRANSIT__CONNECTION_STRING` | — | URI AMQP (obrigatório quando RabbitMq) |
-| `MASSTRANSIT__QUEUE_NAME_PREFIX` | `mecanica-hermes-cadastros` | Prefixo das filas |
-| `ORDEM_SERVICO_API__BASE_URL` | (obrigatório p/ Fase 2) | Base URL da API de Ordem de Serviço |
-| `PAGAMENTO_API__BASE_URL` | (obrigatório p/ Fase 3) | Base URL da API de Pagamentos |
-| `APP__BASE_URL` | `http://localhost:5000` | Base URL pública desta API (links nos e-mails) |
-| `WEBHOOK__SIGNING_SECRET` | (obrigatório p/ Fase 4) | Segredo HMAC para assinar/validar links Aprovar/Rejeitar |
-
-## Migrations
-
-```bash
-dotnet ef migrations add <Nome> \
-  --project src/Mecanica.Hermes.Cadastros.Infrastructure \
-  --startup-project src/Mecanica.Hermes.Cadastros.Api
-```
+Acesse a UI interativa em `http://localhost:<porta>/scalar/v1`.
 
 ## Testes
 
@@ -103,7 +60,11 @@ dotnet ef migrations add <Nome> \
 dotnet test Mecanica.Hermes.Cadastros.slnx --settings coverlet.runsettings
 ```
 
-Os IntegrationTests usam Testcontainers — exigem Docker rodando.
+Os `IntegrationTests` exigem Docker (Testcontainers). Para rodar apenas unit tests:
+
+```bash
+dotnet test Mecanica.Hermes.Cadastros.slnx --filter "FullyQualifiedName!~IntegrationTests"
+```
 
 ## Docker
 
@@ -111,21 +72,45 @@ Os IntegrationTests usam Testcontainers — exigem Docker rodando.
 docker build -t mecanica-hermes-cadastros:dev .
 docker run --rm -p 8080:8080 \
   -e ConnectionStrings__DefaultConnection="..." \
-  -e AUTH__AUTHORITY=... -e AUTH__ISSUER=... \
+  -e AUTH__AUTHORITY=https://test \
+  -e AUTH__ISSUER=https://test \
+  -e WEBHOOK__SIGNING_SECRET=meu-segredo-aqui \
   mecanica-hermes-cadastros:dev
 ```
 
-## Mensageria & métricas
+Imagem pública: `mechermes/mecanica-hermes-cadastros`
 
-- MassTransit configurado **sem SAGA** (este serviço só usa o bus para fluxos de notificação por e-mail).
-- `EnviarEmailCommand` é publicado por handlers de notificação e consumido por `EnviarEmailConsumer`, que delega ao `IEmailSenderService` (MailKit).
-- `OrdemDeServicoAguardandoAprovacaoConsumer` escuta a exchange `ordem-de-servico.aguardando-aprovacao` (publicada pela API de OS) e dispara o mesmo command que o endpoint REST de envio de orçamento.
-- Métricas OTel: meter `Mecanica.Hermes.Cadastros` com counters em cada Domain Event (cliente.criado, produto.criado, etc.). Despachadas in-process pelo `IDomainEventDispatcher` após cada `CommitAsync` do `EfUnitOfWork` — sem Outbox, decisão deliberada (best-effort + zero overhead transacional).
+## Integrações
+
+| Direção | Com quem | Como |
+| --- | --- | --- |
+| **Consume** eventos de | API de OS | `OrdemDeServicoAguardandoAprovacaoEvent` → envia e-mail de orçamento |
+| **Consume** eventos de | API de Pagamentos | `LinkPagamentoGeradoEvent` → envia e-mail com link de pagamento |
+| **Publica** eventos para | API de OS | `OrcamentoAprovadoPeloClienteEvent` / `OrcamentoRejeitadoPeloClienteEvent` via webhook |
+| **Expõe** endpoint M2M para | API de Pagamentos | `GET /api/clientes/{id}` com `servico-scope` |
+
+Para o fluxo completo, consulte [`docs/messaging.md`](./docs/messaging.md).
+
+## Documentação
+
+| Documento | Conteúdo |
+| --- | --- |
+| [`docs/architecture.md`](./docs/architecture.md) | Camadas, padrões, integrações externas e ADRs |
+| [`docs/messaging.md`](./docs/messaging.md) | MassTransit, consumers, eventos publicados, webhook HMAC |
+| [`docs/api-reference.md`](./docs/api-reference.md) | Endpoints, escopos de autenticação |
+| [`docs/configuration.md`](./docs/configuration.md) | Todas as variáveis de ambiente |
+| [`docs/database.md`](./docs/database.md) | Tabelas PostgreSQL, migrations |
+| [`docs/testing.md`](./docs/testing.md) | Estratégia de testes, projetos, cobertura |
+| [`docs/observability.md`](./docs/observability.md) | OpenTelemetry, métricas, logs |
+| [`docs/ci-cd.md`](./docs/ci-cd.md) | GitHub Actions, secrets, deploy |
+| [`docs/runbook.md`](./docs/runbook.md) | Diagnóstico e resolução de problemas |
+| [`docs/adrs.md`](./docs/adrs.md) | Decisões de arquitetura (ADRs 001–006) |
 
 ## Roadmap
 
-- ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit).
-- ✅ **Fase 1.1 (refactor)** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter.
-- ✅ **Fase 2** — Endpoint REST e Consumer para envio de orçamento ao cliente (integração com a API de Ordem de Serviço).
-- ✅ **Fase 3** — Endpoint REST e Consumer para envio de link de pagamento (integração com a API de Pagamentos).
-- ✅ **Fase 4** — WebHook público para receber a aprovação/rejeição do orçamento (HMAC SHA-256 + idempotência via tabela `WebhookEvents` + publish de `OrcamentoAprovadoPeloClienteEvent`/`OrcamentoRejeitadoPeloClienteEvent` para a API de OS consumir).
+- ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit)
+- ✅ **Fase 1.1** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter
+- ✅ **Fase 2** — Consumer + envio de orçamento ao cliente (integração com API de OS)
+- ✅ **Fase 3** — Consumer + envio de link de pagamento (integração com API de Pagamentos)
+- ✅ **Fase 4** — Webhook HMAC SHA-256 para aprovação/rejeição de orçamento
+- ✅ **Fase 5** — Integração cross-service: `[EntityName]` canônico, `servico-scope` M2M, publicação de `OrcamentoAprovadoPeloClienteEvent` / `OrcamentoRejeitadoPeloClienteEvent`
