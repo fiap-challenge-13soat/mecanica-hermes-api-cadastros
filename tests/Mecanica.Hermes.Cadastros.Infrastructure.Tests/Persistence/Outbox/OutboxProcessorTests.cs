@@ -1,5 +1,6 @@
 using System.Text.Json;
 using MassTransit;
+using MassTransit.Testing;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Mecanica.Hermes.Contracts.Integration;
@@ -161,20 +162,13 @@ public class OutboxProcessorTests
     [Fact]
     public async Task ProcessBatch_CaminhoFeliz_DeveMarcarStatusProcessedAposDespacho()
     {
-        // Usa um integration event real do SDK Contracts — o Type é o AssemblyQualifiedName
-        // gravado pelo WebhookEventRepository.
+        // Usa MassTransit.Testing.ITestHarness em vez de mock — `harness.Published.Any<T>()`
+        // espera deterministicamente até o evento ser publicado (com timeout claro), eliminando
+        // o `Task.Delay(300)` mágico da versão anterior que era flaky sob carga.
         var evt = new OrcamentoAprovadoPeloClienteEvent(Guid.NewGuid(), DateTime.UtcNow);
         var evtType = typeof(OrcamentoAprovadoPeloClienteEvent);
 
-        var (sut, publishMock, db) = BuildSut(3);
-
-        publishMock
-            .Setup(p => p.Publish(
-                It.IsAny<object>(),
-                It.IsAny<Type>(),
-                It.IsAny<CancellationToken>()))
-            .Returns(Task.CompletedTask);
-
+        var db = NewDb();
         var msg = new OutboxMessageEntity(
             Guid.NewGuid(),
             evtType.AssemblyQualifiedName!,
@@ -183,23 +177,54 @@ public class OutboxProcessorTests
         db.OutboxMessages.Add(msg);
         await db.SaveChangesAsync();
 
-        using var cts = new CancellationTokenSource(TimeSpan.FromMilliseconds(400));
-        await sut.StartAsync(cts.Token);
-        await Task.Delay(300);
-        await sut.StopAsync(CancellationToken.None);
+        // Service provider com bus real (in-memory via TestHarness) — IPublishEndpoint resolvido
+        // pelo OutboxProcessor sai daqui e cai no harness.
+        var services = new ServiceCollection();
+        services.AddSingleton(db);
+        services.AddMassTransitTestHarness();
+        var provider = services.BuildServiceProvider(true);
 
-        var saved = await db.OutboxMessages.FirstAsync();
-        saved.Status.Should().Be(OutboxMessageStatus.Processed,
-            "mensagem com tipo válido e publish endpoint sem erro deve ser marcada como Processed");
-        saved.ProcessedOn.Should().NotBeNull();
-        saved.RetryCount.Should().Be(0);
+        var harness = provider.GetRequiredService<ITestHarness>();
+        await harness.Start();
 
-        publishMock.Verify(
-            p => p.Publish(
-                It.IsAny<object>(),
-                It.Is<Type>(t => t == evtType),
-                It.IsAny<CancellationToken>()),
-            Times.AtLeastOnce);
+        try
+        {
+            var options = Options.Create(new OutboxOptions
+            {
+                BatchSize = 10,
+                MaxRetries = 3,
+                PollInterval = TimeSpan.FromMilliseconds(50),
+                AllowNonLockingFallback = true
+            });
+            using var metrics = new OutboxHealthMetrics();
+            var sut = new OutboxProcessor(
+                provider.GetRequiredService<IServiceScopeFactory>(),
+                metrics,
+                options,
+                NullLogger<OutboxProcessor>.Instance,
+                TimeProvider.System);
+
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            await sut.StartAsync(cts.Token);
+
+            // Espera **deterministicamente** até o evento ser publicado (ou timeout).
+            (await harness.Published.Any<OrcamentoAprovadoPeloClienteEvent>(cts.Token))
+                .Should().BeTrue("OutboxProcessor deve publicar o integration event no bus");
+
+            await sut.StopAsync(CancellationToken.None);
+
+            // O OutboxProcessor faz SaveChanges depois do publish bem-sucedido — o status
+            // já deve estar Processed quando harness viu o publish.
+            var saved = await db.OutboxMessages.FirstAsync();
+            saved.Status.Should().Be(OutboxMessageStatus.Processed,
+                "mensagem com tipo válido e publish bem-sucedido deve ser marcada como Processed");
+            saved.ProcessedOn.Should().NotBeNull();
+            saved.RetryCount.Should().Be(0);
+        }
+        finally
+        {
+            await harness.Stop();
+        }
     }
 
     [Fact]

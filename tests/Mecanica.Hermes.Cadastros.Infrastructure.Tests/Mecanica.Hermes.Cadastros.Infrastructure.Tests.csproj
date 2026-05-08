@@ -14,6 +14,7 @@
         <PackageReference Include="xunit" />
         <PackageReference Include="xunit.runner.visualstudio" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+        <PackageReference Include="MassTransit.TestFramework" />
     </ItemGroup>
 
     <ItemGroup>

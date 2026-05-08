@@ -32,6 +32,7 @@
     <PackageVersion Include="MassTransit" Version="8.5.9" />
     <PackageVersion Include="MassTransit.Abstractions" Version="8.5.9" />
     <PackageVersion Include="MassTransit.RabbitMQ" Version="8.5.9" />
+    <PackageVersion Include="MassTransit.TestFramework" Version="8.5.9" />
     <!-- CQRS / Validation -->
     <PackageVersion Include="MediatR" Version="14.1.0" />
     <PackageVersion Include="FluentValidation" Version="11.12.0" />
