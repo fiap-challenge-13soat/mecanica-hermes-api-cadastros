@@ -80,8 +80,20 @@ Em CI o `GITHUB_TOKEN` injetado pelo Actions já tem `packages: read` quando a p
   Métricas OTel: `outbox.messages.{dispatched,failed,dead_lettered}` no meter
   `MecanicaHermes.Cadastros.Outbox`. ADR-002 ainda vale para domain events in-process
   (best-effort, sem efeito cross-service).
+- **DLQ observability** (`Infrastructure/Messaging/MessagingFaultObserver`): `IConsumeObserver`
+  global hooka `ConsumeFault<T>` depois de retries esgotados — emite counter
+  `messaging.consume_faults` com tags `message_type`/`exception_type` no meter
+  `MecanicaHermes.Cadastros.Messaging`. Use pra alarmar quando volume de DLQ cresce.
 - **Sem SAGA**: este serviço é puramente reativo. Não orquestra estado de máquina.
 - **`BaseDomain` paralelo com `IsDeleted`**: soft delete real (não vestígio). Local `BaseDomain` é classe paralela ao SDK (não herda — assinaturas divergem). OS/Pagamentos usam direto o do SDK.
+
+### Test infra de mensageria
+
+`MassTransit.TestFramework` está disponível em `Mecanica.Hermes.Cadastros.Infrastructure.Tests`.
+Use `services.AddMassTransitTestHarness()` + `await harness.Published.Any<T>(ct)` quando precisar
+de **espera determinística** por publicação no bus (substitui `Task.Delay(N)` flaky em testes
+de BackgroundService). Exemplo aplicado em
+`OutboxProcessorTests.ProcessBatch_CaminhoFeliz_DeveMarcarStatusProcessedAposDespacho`.
 
 ## Commands
 
