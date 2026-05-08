@@ -40,12 +40,21 @@ Cadastros consome 5 dos 6 pacotes publicados em GitHub Packages na org `fiap-cha
 `Mecanica.Hermes.Shared.MassTransit` **não é consumido** — Cadastros não usa MassTransit Sagas e o pacote ainda é skeleton/Tier 2.
 
 **Fica local (Tier 2)** porque há divergência intencional do SDK:
-- `Domain/Common/Abstractions/BaseDomain.cs` — herda do SDK e adiciona `IsDeleted`/`MarkAsDeleted` (soft delete)
-- `Domain/Common/Abstractions/AggregateRoot.cs` — herda local BaseDomain (preserva soft delete na hierarquia)
-- `Domain/Common/Abstractions/IDomainEvent.cs` — extende `Shared.Core.Domain.IDomainEvent` **+ MediatR.INotification` para que o `MediatorDomainEventDispatcher` continue funcionando
+- `Domain/Common/Abstractions/BaseDomain.cs` — **classe paralela ao SDK** (não herda). Adiciona `IsDeleted`/`MarkAsDeleted` (soft delete) e diverge nas assinaturas: `Id { internal set; }` (SDK usa `private set`) e `RestaurarBase` com parâmetro extra `bool isDeleted` (SDK tem 3 params). Reusa apenas o `DomainClock` do SDK.
+- `Domain/Common/Abstractions/AggregateRoot.cs` — paralela ao SDK também; usa local `BaseDomain` + local `IDomainEvent` (preserva soft delete e MediatR dispatch na hierarquia)
+- `Domain/Common/Abstractions/IDomainEvent.cs` — extende `Shared.Core.Domain.IDomainEvent` + `MediatR.INotification` para que o `MediatorDomainEventDispatcher` continue funcionando
 - `Application/Common/Persistence/IUnitOfWork.cs` — assina sobre `local.AggregateRoot` (não o do SDK) por causa do soft delete
 - `Application/Common/Behaviors/TracingBehavior.cs` — Tier 2; usa source local `MecanicaHermes.Cadastros.Application`
 - `Api/Middleware/GlobalExceptionHandlerMiddleware.cs` + `MiddlewareExtensions.UseGlobalExceptionHandler` — switch de exceções específico do repo
+
+### Por que soft delete em Cadastros mas não em OS/Pagamentos
+
+Modelagem de domínio diferente:
+- **OS** é uma **state machine** — `Cancelada` é um status terminal no agregado, não um delete (a row sempre existe; o histórico de status é parte da auditoria).
+- **Pagamentos** segue lifecycle do Mercado Pago — `Recusado`/`Expirado` são estados, não deletes.
+- **Cadastros** é **CRUD com lifecycle de cliente/produto** — deletar um cliente não pode quebrar a referência lógica das OSs antigas (que estão em outro DB, sem FK física). Soft delete preserva o ID + serve como base para os partial unique indexes (`Cpf`/`Email`/`Codigo`/`Nome` únicos apenas entre não-deletados, permitindo recriar entidade depois).
+
+Por isso só Cadastros estende `BaseDomain` + `IUnitOfWork` localmente; OS e Pagamentos consomem direto do SDK.
 
 ### nuget.config — credenciais para baixar do SDK
 
@@ -68,7 +77,7 @@ Em CI o `GITHUB_TOKEN` injetado pelo Actions já tem `packages: read` quando a p
   indisponível entre o commit e o publish, o evento se perde. Migração para Outbox EF Core
   está prevista na Fase 4 do roadmap (resiliência crítica).
 - **Sem SAGA**: este serviço é puramente reativo. Não orquestra estado de máquina.
-- **`BaseDomain` estendido com `IsDeleted`**: soft delete. Local `BaseDomain` herda do SDK e adiciona o campo. OS/Pagamentos usam direto o do SDK.
+- **`BaseDomain` paralelo com `IsDeleted`**: soft delete real (não vestígio). Local `BaseDomain` é classe paralela ao SDK (não herda — assinaturas divergem). OS/Pagamentos usam direto o do SDK.
 
 ## Commands
 
