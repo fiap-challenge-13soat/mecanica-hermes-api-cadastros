@@ -27,7 +27,8 @@ public class ArchitectureTests
             .ShouldNot().HaveDependencyOn(ApplicationNamespace)
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue($"Domain não deve depender de Application. Violações: {Violations(result)}");
+        result.IsSuccessful.Should()
+            .BeTrue($"Domain não deve depender de Application. Violações: {Violations(result)}");
     }
 
     [Fact]
@@ -38,7 +39,8 @@ public class ArchitectureTests
             .ShouldNot().HaveDependencyOn(InfrastructureNamespace)
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue($"Domain não deve depender de Infrastructure. Violações: {Violations(result)}");
+        result.IsSuccessful.Should()
+            .BeTrue($"Domain não deve depender de Infrastructure. Violações: {Violations(result)}");
     }
 
     [Fact]
@@ -60,7 +62,8 @@ public class ArchitectureTests
             .ShouldNot().HaveDependencyOn(InfrastructureNamespace)
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue($"Application não deve depender de Infrastructure. Violações: {Violations(result)}");
+        result.IsSuccessful.Should()
+            .BeTrue($"Application não deve depender de Infrastructure. Violações: {Violations(result)}");
     }
 
     [Fact]
@@ -82,7 +85,8 @@ public class ArchitectureTests
             .ShouldNot().HaveDependencyOn("Microsoft.EntityFrameworkCore")
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue($"Application não deve referenciar EntityFrameworkCore. Violações: {Violations(result)}");
+        result.IsSuccessful.Should()
+            .BeTrue($"Application não deve referenciar EntityFrameworkCore. Violações: {Violations(result)}");
     }
 
     [Fact]

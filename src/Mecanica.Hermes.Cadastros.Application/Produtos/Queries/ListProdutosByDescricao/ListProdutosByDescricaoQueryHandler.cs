@@ -11,7 +11,9 @@ namespace Mecanica.Hermes.Cadastros.Application.Produtos.Queries.ListProdutosByD
 internal sealed class ListProdutosByDescricaoQueryHandler(IProdutoRepository repository)
     : IRequestHandler<ListProdutosByDescricaoQuery, Result<PagedResult<ProdutoDto>>>
 {
-    public async Task<Result<PagedResult<ProdutoDto>>> Handle(ListProdutosByDescricaoQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedResult<ProdutoDto>>> Handle(
+        ListProdutosByDescricaoQuery request,
+        CancellationToken cancellationToken)
     {
         var descricao = DescricaoProdutoVo.Criar(request.Descricao);
         if (descricao.IsFailure)

@@ -39,7 +39,8 @@ public sealed class CnpjVo
 
         int[] validadorPesos = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-        for (var i = 0; i < 12; i++) validador1 += validadorPesos[i + 1] * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
+        for (var i = 0; i < 12; i++)
+            validador1 += validadorPesos[i + 1] * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
 
         validador1 = validador1 % 11;
 
@@ -51,7 +52,8 @@ public sealed class CnpjVo
         if (valor[12].ToString() != validador1.ToString(CultureInfo.InvariantCulture))
             return false;
 
-        for (var i = 0; i < 13; i++) validador2 += validadorPesos[i] * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
+        for (var i = 0; i < 13; i++)
+            validador2 += validadorPesos[i] * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
 
         validador2 = validador2 % 11;
 

@@ -19,7 +19,9 @@ internal class ServicoRepository(AppDbContext db, IUnitOfWork uow) : IServicoRep
         return servicoEntity?.ToDomain();
     }
 
-    public async Task<PagedResult<Servico>> ListByDescricaoAsync(DescricaoProdutoVo descricao, PaginationParams paginationParams)
+    public async Task<PagedResult<Servico>> ListByDescricaoAsync(
+        DescricaoProdutoVo descricao,
+        PaginationParams paginationParams)
     {
         var pattern = $"%{descricao.Valor}%";
 

@@ -39,7 +39,8 @@ public sealed class CpfVo
         var validador1 = 0;
         var validador2 = 0;
 
-        for (var i = 0; i < 9; i++) validador1 += (10 - i) * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
+        for (var i = 0; i < 9; i++)
+            validador1 += (10 - i) * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
 
         validador1 = validador1 % 11;
 
@@ -51,7 +52,8 @@ public sealed class CpfVo
         if (valor[9].ToString() != validador1.ToString(CultureInfo.InvariantCulture))
             return false;
 
-        for (var i = 0; i < 10; i++) validador2 += (11 - i) * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
+        for (var i = 0; i < 10; i++)
+            validador2 += (11 - i) * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
 
         validador2 = validador2 % 11;
 

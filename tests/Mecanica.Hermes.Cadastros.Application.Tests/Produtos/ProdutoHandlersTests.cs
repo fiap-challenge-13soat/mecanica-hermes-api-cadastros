@@ -66,7 +66,9 @@ public class ProdutoHandlersTests
         _repository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(produto);
         var handler = new UpdateProdutoCommandHandler(_repository.Object, _uow.Object);
 
-        var result = await handler.Handle(new UpdateProdutoCommand(produto.Id, "Novo Nome", 99m), CancellationToken.None);
+        var result = await handler.Handle(
+            new UpdateProdutoCommand(produto.Id, "Novo Nome", 99m),
+            CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }

@@ -65,7 +65,9 @@ public class OutboxProcessorTests
         return (sut, publishMock, db);
     }
 
-    private static OutboxMessageEntity PendingMessage(string type = "Inexistent.Type, NoAssembly", string payload = "{}")
+    private static OutboxMessageEntity PendingMessage(
+        string type = "Inexistent.Type, NoAssembly",
+        string payload = "{}")
     {
         return new OutboxMessageEntity(Guid.NewGuid(), type, payload, DateTime.UtcNow);
     }

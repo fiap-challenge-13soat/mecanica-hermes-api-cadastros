@@ -36,7 +36,8 @@ public sealed class QuantidadeProdutoVo
     internal Result<QuantidadeProdutoVo> Subtrair(QuantidadeProdutoVo quantidade)
     {
         if (Valor <= quantidade.Valor)
-            return Result<QuantidadeProdutoVo>.BadRequest("A quantidade disponível do produto não permite atender esta demanda.");
+            return Result<QuantidadeProdutoVo>.BadRequest(
+                "A quantidade disponível do produto não permite atender esta demanda.");
 
         Valor -= quantidade.Valor;
         return Result<QuantidadeProdutoVo>.Ok();

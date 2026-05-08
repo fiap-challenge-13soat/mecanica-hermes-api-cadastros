@@ -19,7 +19,9 @@ internal class ProdutoRepository(AppDbContext db, IUnitOfWork uow) : IProdutoRep
         return produtoEntity?.ToDomain();
     }
 
-    public async Task<PagedResult<Produto>> ListByDescricaoAsync(DescricaoProdutoVo descricao, PaginationParams paginationParams)
+    public async Task<PagedResult<Produto>> ListByDescricaoAsync(
+        DescricaoProdutoVo descricao,
+        PaginationParams paginationParams)
     {
         var pattern = $"%{descricao.Valor}%";
 
