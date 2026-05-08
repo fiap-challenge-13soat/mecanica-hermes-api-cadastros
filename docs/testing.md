@@ -28,36 +28,23 @@ tests/
 
 ## Executar localmente
 
-### Todos os testes (exceto integração)
-
 ```bash
-dotnet test Mecanica.Hermes.Cadastros.slnx \
-  --settings coverlet.runsettings \
-  --results-directory .temp/coverage \
-  --logger:"console;verbosity=normal"
+# tudo (precisa Docker para os testes de integração)
+just test
+# ou
+dotnet test Mecanica.Hermes.Cadastros.slnx --settings coverlet.runsettings \
+    --results-directory .temp/coverage
+
+# apenas unitários (sem Docker)
+just test-unit
+
+# relatório HTML de cobertura (depois do test)
+just coverage-report
+# abre .temp/coverage/report/index.html
 ```
 
-### Apenas unit tests (sem Docker)
-
-```bash
-dotnet test Mecanica.Hermes.Cadastros.slnx \
-  --filter "FullyQualifiedName!~IntegrationTests" \
-  --settings coverlet.runsettings
-```
-
-### Gerar relatório HTML de cobertura
-
-```bash
-dotnet tool install --global dotnet-reportgenerator-globaltool
-
-reportgenerator \
-  -reports:".temp/coverage/**/coverage.opencover.xml" \
-  -targetdir:"coverage-report" \
-  -reporttypes:"Html;TextSummary" \
-  -assemblyfilters:"+Mecanica.Hermes.Cadastros.Api;+Mecanica.Hermes.Cadastros.Application;+Mecanica.Hermes.Cadastros.Domain;+Mecanica.Hermes.Cadastros.Infrastructure;-*Tests"
-
-open coverage-report/index.html
-```
+> `just coverage-report` depende de `dotnet-reportgenerator-globaltool`.
+> Instale com: `dotnet tool install --global dotnet-reportgenerator-globaltool`
 
 ## Padrões de teste
 

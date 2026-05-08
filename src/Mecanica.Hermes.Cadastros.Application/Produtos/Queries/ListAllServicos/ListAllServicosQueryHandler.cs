@@ -14,11 +14,11 @@ internal sealed class ListAllServicosQueryHandler(IServicoRepository repository)
         CancellationToken cancellationToken)
     {
         var paginationParams = new PaginationParams { Page = request.Page, PageSize = request.PageSize };
-        
+
         var pagedServicos = await repository.ListAllAsync(paginationParams);
-        
+
         var servicoDtos = pagedServicos.Items.Select(s => s.ToDto()).ToList();
-        
+
         var pagedResult = PagedResult<ServicoDto>.Create(
             servicoDtos,
             pagedServicos.Page,

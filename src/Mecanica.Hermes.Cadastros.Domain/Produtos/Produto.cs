@@ -1,8 +1,8 @@
 using Mecanica.Hermes.Cadastros.Domain.Common.Abstractions;
-using Mecanica.Hermes.Shared.Core.Results;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.Enums;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.Events;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
+using Mecanica.Hermes.Shared.Core.Results;
 
 namespace Mecanica.Hermes.Cadastros.Domain.Produtos;
 

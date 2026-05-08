@@ -1,6 +1,6 @@
-using Mecanica.Hermes.Shared.Core.Pagination;
 using Mecanica.Hermes.Cadastros.Domain.Produtos;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
+using Mecanica.Hermes.Shared.Core.Pagination;
 
 namespace Mecanica.Hermes.Cadastros.Application.Produtos.Ports;
 

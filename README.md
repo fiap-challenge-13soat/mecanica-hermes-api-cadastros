@@ -32,39 +32,58 @@ tests/
   Mecanica.Hermes.Cadastros.TestUtils/
 ```
 
+## Pré-requisitos
+
+| Ferramenta | Versão | Necessidade |
+| --- | --- | --- |
+| [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0) | 10.0+ | obrigatória |
+| [Docker](https://www.docker.com/get-started) | qualquer atual | testes de integração + serviços de dev |
+| [just](https://github.com/casey/just) | qualquer | opcional — atalhos de build/test/migrations |
+
 ## Início rápido
 
+### 1. Subir as dependências de runtime
+
 ```bash
-# 1. Subir PostgreSQL
 docker run -d --name pg-cadastros -p 5432:5432 \
   -e POSTGRES_PASSWORD=postgres \
   -e POSTGRES_DB=mecanica_hermes_cadastros \
   postgres:18.1
+```
 
-# 2. Configurar variáveis mínimas
+### 2. Configurar variáveis mínimas
+
+```bash
 export ConnectionStrings__DefaultConnection="Host=localhost;Database=mecanica_hermes_cadastros;Username=postgres;Password=postgres"
 export AUTH__AUTHORITY=https://test
 export AUTH__ISSUER=https://test
 export EmailSender__Enabled=false
 export WEBHOOK__SIGNING_SECRET=meu-segredo-de-32-bytes-ou-mais-aqui
+```
 
-# 3. Executar (migrations aplicadas no startup)
+### 3. Rodar a API
+
+```bash
+# migrations aplicadas automaticamente no startup
 dotnet run --project src/Mecanica.Hermes.Cadastros.Api
+
+# ou via just
+just run
 ```
 
 Acesse a UI interativa em `http://localhost:<porta>/scalar/v1`.
 
-## Testes
+### 4. Rodar os testes
 
 ```bash
-dotnet test Mecanica.Hermes.Cadastros.slnx --settings coverlet.runsettings
+# tudo (requer Docker — testes de integração usam Testcontainers)
+just test
+
+# apenas unitários (sem Docker)
+just test-unit
 ```
 
-Os `IntegrationTests` exigem Docker (Testcontainers). Para rodar apenas unit tests:
-
-```bash
-dotnet test Mecanica.Hermes.Cadastros.slnx --filter "FullyQualifiedName!~IntegrationTests"
-```
+Cobertura mínima exigida pelo CI: **≥ 80%** de linhas. Veja [`docs/testing.md`](./docs/testing.md) para detalhes.
 
 ## Docker
 
@@ -101,6 +120,7 @@ Para o fluxo completo, consulte [`docs/messaging.md`](./docs/messaging.md).
 | [`docs/configuration.md`](./docs/configuration.md) | Todas as variáveis de ambiente |
 | [`docs/database.md`](./docs/database.md) | Tabelas PostgreSQL, migrations |
 | [`docs/testing.md`](./docs/testing.md) | Estratégia de testes, projetos, cobertura |
+| [`docs/contributing.md`](./docs/contributing.md) | Guia para novos contribuidores |
 | [`docs/observability.md`](./docs/observability.md) | OpenTelemetry, métricas, logs |
 | [`docs/ci-cd.md`](./docs/ci-cd.md) | GitHub Actions, secrets, deploy |
 | [`docs/runbook.md`](./docs/runbook.md) | Diagnóstico e resolução de problemas |

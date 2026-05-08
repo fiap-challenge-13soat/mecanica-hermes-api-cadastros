@@ -29,7 +29,7 @@ internal sealed class AddVeiculoCommandHandler(IClienteRepository repository, IU
         var result = cliente.AdicionarVeiculo(request.Modelo, request.Marca, request.Placa, request.Ano);
         if (result.IsFailure)
             return Result<ClienteDto>.BadRequest(result.Errors);
-        
+
         repository.Update(cliente);
         await uow.CommitAsync(cancellationToken);
 

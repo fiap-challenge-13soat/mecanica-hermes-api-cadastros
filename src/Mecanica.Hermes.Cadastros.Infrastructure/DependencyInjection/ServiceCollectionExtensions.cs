@@ -1,7 +1,6 @@
 using System.Reflection;
 using Mecanica.Hermes.Cadastros.Application;
 using Mecanica.Hermes.Cadastros.Application.Common.Behaviors;
-using Mecanica.Hermes.Shared.Application.Behaviors;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 using Mecanica.Hermes.Cadastros.Domain;
 using Mecanica.Hermes.Cadastros.Infrastructure.Emails.DependencyInjection;
@@ -12,6 +11,7 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Observability;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.DependencyInjection;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Repositories;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
+using Mecanica.Hermes.Shared.Application.Behaviors;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;

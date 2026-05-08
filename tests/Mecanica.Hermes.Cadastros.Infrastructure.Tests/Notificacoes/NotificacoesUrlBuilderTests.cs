@@ -4,7 +4,7 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Notificacoes;
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Tests.Notificacoes;
 
 [Collection("WebhookSecret")]
-public class NotificacoesUrlBuilderTests : IDisposable
+public sealed class NotificacoesUrlBuilderTests : IDisposable
 {
     public NotificacoesUrlBuilderTests()
     {
@@ -14,6 +14,7 @@ public class NotificacoesUrlBuilderTests : IDisposable
     public void Dispose()
     {
         Environment.SetEnvironmentVariable("APP__BASE_URL", null);
+        GC.SuppressFinalize(this);
     }
 
     [Fact]

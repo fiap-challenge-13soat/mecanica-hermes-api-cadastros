@@ -1,3 +1,4 @@
+using System.Globalization;
 using Mecanica.Hermes.Cadastros.Domain.Common.Helpers;
 using Mecanica.Hermes.Shared.Core.Results;
 
@@ -38,7 +39,7 @@ public sealed class CnpjVo
 
         int[] validadorPesos = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-        for (var i = 0; i < 12; i++) validador1 += validadorPesos[i + 1] * int.Parse(valor[i].ToString());
+        for (var i = 0; i < 12; i++) validador1 += validadorPesos[i + 1] * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
 
         validador1 = validador1 % 11;
 
@@ -47,10 +48,10 @@ public sealed class CnpjVo
         else
             validador1 = 11 - validador1;
 
-        if (valor[12].ToString() != validador1.ToString())
+        if (valor[12].ToString() != validador1.ToString(CultureInfo.InvariantCulture))
             return false;
 
-        for (var i = 0; i < 13; i++) validador2 += validadorPesos[i] * int.Parse(valor[i].ToString());
+        for (var i = 0; i < 13; i++) validador2 += validadorPesos[i] * int.Parse(valor[i].ToString(), CultureInfo.InvariantCulture);
 
         validador2 = validador2 % 11;
 
@@ -59,7 +60,7 @@ public sealed class CnpjVo
         else
             validador2 = 11 - validador2;
 
-        if (valor[13].ToString() != validador2.ToString())
+        if (valor[13].ToString() != validador2.ToString(CultureInfo.InvariantCulture))
             return false;
 
         return true;

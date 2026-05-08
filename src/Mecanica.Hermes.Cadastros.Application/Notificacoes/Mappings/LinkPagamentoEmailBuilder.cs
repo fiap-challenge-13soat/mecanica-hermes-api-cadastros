@@ -21,7 +21,7 @@ public static class LinkPagamentoEmailBuilder
 
         var sb = new StringBuilder();
         sb.Append("<!DOCTYPE html><html lang=\"pt-BR\"><body style=\"font-family:Arial,sans-serif;color:#222\">");
-        sb.Append($"<p>Olá, <strong>{pagamento.NomeCliente}</strong>,</p>");
+        sb.Append(CultureInfo.InvariantCulture, $"<p>Olá, <strong>{pagamento.NomeCliente}</strong>,</p>");
         sb.Append("<p>O link para pagamento do seu serviço está disponível.</p>");
         sb.Append("<p><strong>Ordem de Serviço:</strong> ").Append(pagamento.OrdemDeServicoId.ToString("D")).Append("</p>");
         sb.Append("<p><strong>Valor:</strong> ").Append(pagamento.Valor.ToString("C", ptBr)).Append("</p>");

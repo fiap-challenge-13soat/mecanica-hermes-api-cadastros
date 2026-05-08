@@ -73,24 +73,32 @@ Tabela de idempotência dos webhooks de aprovação/rejeição de orçamento.
 ### Criar nova migration
 
 ```bash
-dotnet ef migrations add <NomeDaMigration> \
+just migration-add NomeDaMigration
+# ou:
+dotnet ef migrations add NomeDaMigration \
   --project src/Mecanica.Hermes.Cadastros.Infrastructure \
   --startup-project src/Mecanica.Hermes.Cadastros.Api
 ```
 
 ### Aplicar migrations
 
-**Automático no startup** (padrão):
-```bash
-export RUN_MIGRATIONS_ON_STARTUP=true
-dotnet run --project src/Mecanica.Hermes.Cadastros.Api
-```
+**Automático no startup** (padrão): a API aplica migrations via `MigrateDatabaseAsync` ao iniciar.
+Para desabilitar em ambientes onde migrations rodam num pipeline separado, configure
+`RUN_MIGRATIONS_ON_STARTUP=false`.
 
 **Manual via CLI:**
 ```bash
+just migration-apply
+# ou:
 dotnet ef database update \
   --project src/Mecanica.Hermes.Cadastros.Infrastructure \
   --startup-project src/Mecanica.Hermes.Cadastros.Api
+```
+
+### Listar migrations
+
+```bash
+just migration-list
 ```
 
 ### Reverter uma migration
@@ -100,3 +108,15 @@ dotnet ef database update <NomeMigrationAnterior> \
   --project src/Mecanica.Hermes.Cadastros.Infrastructure \
   --startup-project src/Mecanica.Hermes.Cadastros.Api
 ```
+
+### Convenção de nome
+
+Padrão `{Verbo}{Entidade}` em PascalCase. Exemplos:
+
+- `InitialCreate`
+- `AddWebhookEvents`
+- `AddOutboxMessages`
+- `AlterClienteAddIsDeleted`
+
+**Não** use `Migration1`, `Temp`, `Fix`, `Test`. O nome deve descrever a mudança de schema —
+a data já vem no prefixo gerado pelo EF.

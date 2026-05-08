@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
-using Mecanica.Hermes.Cadastros.IntegrationTests.Infrastructure;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
+using Mecanica.Hermes.Cadastros.IntegrationTests.Infrastructure;
 using Mecanica.Hermes.Contracts.Integration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +31,7 @@ public sealed class WebhookEventRepositoryIntegrationTests
         _factory = factory;
     }
 
-    private async Task LimparTabelasAsync(AppDbContext db)
+    private static async Task LimparTabelasAsync(AppDbContext db)
     {
         await db.WebhookEvents.ExecuteDeleteAsync();
         await db.OutboxMessages.ExecuteDeleteAsync();

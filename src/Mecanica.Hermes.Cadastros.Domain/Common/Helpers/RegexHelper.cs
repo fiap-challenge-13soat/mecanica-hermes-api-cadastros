@@ -17,7 +17,7 @@ internal static partial class RegexHelper
 
     [GeneratedRegex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.None, RegexTimeoutMilliseconds)]
     public static partial Regex FormatoEmail();
-    
+
     public static string NormalizarNumeros(string valor)
     {
         return Regex.Replace(valor, @"\D", "", RegexOptions.None, TimeSpan.FromMilliseconds(RegexTimeoutMilliseconds));
