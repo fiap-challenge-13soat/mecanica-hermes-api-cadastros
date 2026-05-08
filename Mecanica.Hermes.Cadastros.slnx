@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Mecanica.Hermes.Cadastros.Api/Mecanica.Hermes.Cadastros.Api.csproj" />
+    <Project Path="src/Mecanica.Hermes.Cadastros.Application/Mecanica.Hermes.Cadastros.Application.csproj" />
+    <Project Path="src/Mecanica.Hermes.Cadastros.Domain/Mecanica.Hermes.Cadastros.Domain.csproj" />
+    <Project Path="src/Mecanica.Hermes.Cadastros.Infrastructure/Mecanica.Hermes.Cadastros.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Mecanica.Hermes.Cadastros.Api.Tests/Mecanica.Hermes.Cadastros.Api.Tests.csproj" />
+    <Project Path="tests/Mecanica.Hermes.Cadastros.Application.Tests/Mecanica.Hermes.Cadastros.Application.Tests.csproj" />
+    <Project Path="tests/Mecanica.Hermes.Cadastros.ArchitectureTests/Mecanica.Hermes.Cadastros.ArchitectureTests.csproj" />
+    <Project Path="tests/Mecanica.Hermes.Cadastros.Domain.Tests/Mecanica.Hermes.Cadastros.Domain.Tests.csproj" />
+    <Project Path="tests/Mecanica.Hermes.Cadastros.Infrastructure.Tests/Mecanica.Hermes.Cadastros.Infrastructure.Tests.csproj" />
+    <Project Path="tests/Mecanica.Hermes.Cadastros.IntegrationTests/Mecanica.Hermes.Cadastros.IntegrationTests.csproj" />
+    <Project Path="tests/Mecanica.Hermes.Cadastros.TestUtils/Mecanica.Hermes.Cadastros.TestUtils.csproj" />
+  </Folder>
+</Solution>

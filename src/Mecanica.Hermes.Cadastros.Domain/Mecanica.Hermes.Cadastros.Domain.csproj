@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" />
+        <PackageReference Include="Mecanica.Hermes.Shared.Core" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Domain.Tests" />
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Application.Tests" />
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Infrastructure.Tests" />
+    </ItemGroup>
+
+</Project>

@@ -1,1 +1,116 @@
-# mecanica-hermes-cadastros
+# Mecânica Hermes — API de Cadastros
+
+Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos**) e de **Produtos** / **Serviços**, além do envio de **e-mails** ao cliente via MailKit e do **webhook** de aprovação/rejeição de orçamento. Faz parte do ecossistema composto por três microsserviços:
+
+| Serviço | Repositório |
+| --- | --- |
+| **Cadastros** (este) | `mecanica-hermes-cadastros` |
+| Ordem de Serviço | `mecanica-hermes-api-ordem-servico` |
+| Pagamentos | `mecanica-hermes-api-pagamentos` |
+
+## Stack
+
+- **.NET 10** (Minimal APIs)
+- **PostgreSQL 18** + **EF Core 10**
+- **MediatR** (CQRS) + **MapperExtensions** estáticos + **Serilog** + **OpenTelemetry**
+- **MailKit** (SMTP) + **MassTransit** (RabbitMQ ou in-memory)
+- **Scalar** (UI OpenAPI)
+- **xUnit** + **Testcontainers** + **NetArchTest**
+
+## Estrutura (Clean Architecture)
+
+```
+src/
+  Mecanica.Hermes.Cadastros.Domain/          Aggregates, Value Objects, Domain Events
+  Mecanica.Hermes.Cadastros.Application/     Commands/Queries (MediatR), DTOs, Ports
+  Mecanica.Hermes.Cadastros.Infrastructure/  EF Core + Postgres, MailKit, Repositories
+  Mecanica.Hermes.Cadastros.Api/             Minimal APIs, Endpoints, Auth, Scalar
+tests/
+  Mecanica.Hermes.Cadastros.{Domain,Application,Infrastructure,Api}.Tests/
+  Mecanica.Hermes.Cadastros.IntegrationTests/   (WebApplicationFactory + Testcontainers)
+  Mecanica.Hermes.Cadastros.ArchitectureTests/  (NetArchTest)
+  Mecanica.Hermes.Cadastros.TestUtils/
+```
+
+## Início rápido
+
+```bash
+# 1. Subir PostgreSQL
+docker run -d --name pg-cadastros -p 5432:5432 \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_DB=mecanica_hermes_cadastros \
+  postgres:18.1
+
+# 2. Configurar variáveis mínimas
+export ConnectionStrings__DefaultConnection="Host=localhost;Database=mecanica_hermes_cadastros;Username=postgres;Password=postgres"
+export AUTH__AUTHORITY=https://test
+export AUTH__ISSUER=https://test
+export EmailSender__Enabled=false
+export WEBHOOK__SIGNING_SECRET=meu-segredo-de-32-bytes-ou-mais-aqui
+
+# 3. Executar (migrations aplicadas no startup)
+dotnet run --project src/Mecanica.Hermes.Cadastros.Api
+```
+
+Acesse a UI interativa em `http://localhost:<porta>/scalar/v1`.
+
+## Testes
+
+```bash
+dotnet test Mecanica.Hermes.Cadastros.slnx --settings coverlet.runsettings
+```
+
+Os `IntegrationTests` exigem Docker (Testcontainers). Para rodar apenas unit tests:
+
+```bash
+dotnet test Mecanica.Hermes.Cadastros.slnx --filter "FullyQualifiedName!~IntegrationTests"
+```
+
+## Docker
+
+```bash
+docker build -t mecanica-hermes-cadastros:dev .
+docker run --rm -p 8080:8080 \
+  -e ConnectionStrings__DefaultConnection="..." \
+  -e AUTH__AUTHORITY=https://test \
+  -e AUTH__ISSUER=https://test \
+  -e WEBHOOK__SIGNING_SECRET=meu-segredo-aqui \
+  mecanica-hermes-cadastros:dev
+```
+
+Imagem pública: `mechermes/mecanica-hermes-cadastros`
+
+## Integrações
+
+| Direção | Com quem | Como |
+| --- | --- | --- |
+| **Consume** eventos de | API de OS | `OrdemDeServicoAguardandoAprovacaoEvent` → envia e-mail de orçamento |
+| **Consume** eventos de | API de Pagamentos | `LinkPagamentoGeradoEvent` → envia e-mail com link de pagamento |
+| **Publica** eventos para | API de OS | `OrcamentoAprovadoPeloClienteEvent` / `OrcamentoRejeitadoPeloClienteEvent` via webhook |
+| **Expõe** endpoint M2M para | API de Pagamentos | `GET /api/clientes/{id}` com `servico-scope` |
+
+Para o fluxo completo, consulte [`docs/messaging.md`](./docs/messaging.md).
+
+## Documentação
+
+| Documento | Conteúdo |
+| --- | --- |
+| [`docs/architecture.md`](./docs/architecture.md) | Camadas, padrões, integrações externas e ADRs |
+| [`docs/messaging.md`](./docs/messaging.md) | MassTransit, consumers, eventos publicados, webhook HMAC |
+| [`docs/api-reference.md`](./docs/api-reference.md) | Endpoints, escopos de autenticação |
+| [`docs/configuration.md`](./docs/configuration.md) | Todas as variáveis de ambiente |
+| [`docs/database.md`](./docs/database.md) | Tabelas PostgreSQL, migrations |
+| [`docs/testing.md`](./docs/testing.md) | Estratégia de testes, projetos, cobertura |
+| [`docs/observability.md`](./docs/observability.md) | OpenTelemetry, métricas, logs |
+| [`docs/ci-cd.md`](./docs/ci-cd.md) | GitHub Actions, secrets, deploy |
+| [`docs/runbook.md`](./docs/runbook.md) | Diagnóstico e resolução de problemas |
+| [`docs/adrs.md`](./docs/adrs.md) | Decisões de arquitetura (ADRs 001–006) |
+
+## Roadmap
+
+- ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit)
+- ✅ **Fase 1.1** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter
+- ✅ **Fase 2** — Consumer + envio de orçamento ao cliente (integração com API de OS)
+- ✅ **Fase 3** — Consumer + envio de link de pagamento (integração com API de Pagamentos)
+- ✅ **Fase 4** — Webhook HMAC SHA-256 para aprovação/rejeição de orçamento
+- ✅ **Fase 5** — Integração cross-service: `[EntityName]` canônico, `servico-scope` M2M, publicação de `OrcamentoAprovadoPeloClienteEvent` / `OrcamentoRejeitadoPeloClienteEvent`

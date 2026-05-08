@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <DebugType>full</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Scalar.AspNetCore" />
+        <PackageReference Include="Mecanica.Hermes.Shared.AspNetCore" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Mecanica.Hermes.Cadastros.Domain\Mecanica.Hermes.Cadastros.Domain.csproj" />
+        <ProjectReference Include="..\Mecanica.Hermes.Cadastros.Application\Mecanica.Hermes.Cadastros.Application.csproj" />
+        <ProjectReference Include="..\Mecanica.Hermes.Cadastros.Infrastructure\Mecanica.Hermes.Cadastros.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.Api.Tests" />
+        <InternalsVisibleTo Include="Mecanica.Hermes.Cadastros.IntegrationTests" />
+    </ItemGroup>
+
+</Project>
