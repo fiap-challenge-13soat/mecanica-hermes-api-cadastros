@@ -72,10 +72,14 @@ Em CI o `GITHUB_TOKEN` injetado pelo Actions já tem `packages: read` quando a p
 
 ### Diferença frente a OS/Pagamentos
 
-- **Sem Outbox** (decisão registrada em ADR-002 de Cadastros): publicação direta via
-  `IPublishEndpoint` após commit do `webhook_events`. Risco aceito: se o RabbitMQ estiver
-  indisponível entre o commit e o publish, o evento se perde. Migração para Outbox EF Core
-  está prevista na Fase 4 do roadmap (resiliência crítica).
+- **Outbox transacional para webhook → OS** (ADR-007): integration events do fluxo de
+  aprovação/rejeição de orçamento são enfileirados na tabela `OutboxMessages` no MESMO
+  `SaveChanges` do `webhook_events` (atomicidade garantida pelo Postgres). O `OutboxProcessor`
+  (BackgroundService) faz polling de 2s, `SELECT … FOR UPDATE SKIP LOCKED` para multi-instância,
+  e dispatcha via `IPublishEndpoint`. DLQ após 10 tentativas (configurável via `OUTBOX__MAX_RETRIES`).
+  Métricas OTel: `outbox.messages.{dispatched,failed,dead_lettered}` no meter
+  `MecanicaHermes.Cadastros.Outbox`. ADR-002 ainda vale para domain events in-process
+  (best-effort, sem efeito cross-service).
 - **Sem SAGA**: este serviço é puramente reativo. Não orquestra estado de máquina.
 - **`BaseDomain` paralelo com `IsDeleted`**: soft delete real (não vestígio). Local `BaseDomain` é classe paralela ao SDK (não herda — assinaturas divergem). OS/Pagamentos usam direto o do SDK.
 

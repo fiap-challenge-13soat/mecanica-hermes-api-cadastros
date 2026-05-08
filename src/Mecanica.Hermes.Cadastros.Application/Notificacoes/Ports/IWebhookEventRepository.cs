@@ -8,13 +8,26 @@ namespace Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 public interface IWebhookEventRepository
 {
     /// <summary>
-    ///     Tenta registrar o evento. Retorna <c>true</c> na primeira ocorrência;
-    ///     <c>false</c> quando já existe registro para a mesma combinação
-    ///     <paramref name="scope" /> + <paramref name="externalId" /> (duplicata).
+    ///     Registra atomicamente o evento de webhook na tabela de idempotência <em>e</em> enfileira
+    ///     <paramref name="integrationEvent" /> no Outbox transacional, ambos no mesmo
+    ///     <c>SaveChanges</c>. Em caso de duplicata (mesma chave <paramref name="scope" /> +
+    ///     <paramref name="externalId" />), <em>nenhuma</em> linha é gravada (rollback).
+    ///     <para>
+    ///         Garante que: se o registro de idempotência foi commitado, o integration event
+    ///         <b>vai ser publicado</b> (em background pelo <c>OutboxProcessor</c>), mesmo que o
+    ///         broker (RabbitMQ) esteja indisponível no momento do webhook. Mitiga o risco aceito
+    ///         em ADR-002 do publish direto via <c>IPublishEndpoint</c>.
+    ///     </para>
     /// </summary>
+    /// <returns>
+    ///     <c>true</c> na primeira ocorrência (registrado + enfileirado);
+    ///     <c>false</c> quando já existe registro (duplicata — outro webhook idêntico já foi
+    ///     processado e o evento já foi enfileirado anteriormente).
+    /// </returns>
     Task<bool> TryRegisterAsync(
         string scope,
         string externalId,
         string status,
+        object integrationEvent,
         CancellationToken cancellationToken);
 }

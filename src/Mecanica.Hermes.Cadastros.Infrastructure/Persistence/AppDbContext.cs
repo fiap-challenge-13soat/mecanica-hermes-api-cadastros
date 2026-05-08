@@ -1,5 +1,6 @@
 using System.Reflection;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Entities;
+using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence;
@@ -11,6 +12,7 @@ internal sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbC
     public DbSet<ProdutoEntity> Produtos => Set<ProdutoEntity>();
     public DbSet<ServicoEntity> Servicos => Set<ServicoEntity>();
     public DbSet<WebhookEventEntity> WebhookEvents => Set<WebhookEventEntity>();
+    public DbSet<OutboxMessageEntity> OutboxMessages => Set<OutboxMessageEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

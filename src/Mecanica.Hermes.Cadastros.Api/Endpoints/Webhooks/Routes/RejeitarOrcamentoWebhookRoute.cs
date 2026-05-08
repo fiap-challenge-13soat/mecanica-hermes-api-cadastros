@@ -1,4 +1,3 @@
-using MassTransit;
 using Mecanica.Hermes.Contracts.Integration;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,8 @@ public static class RejeitarOrcamentoWebhookRoute
             .WithName("RejeitarOrcamentoWebhook")
             .AllowAnonymous()
             .WithDescription("Endpoint público acionado pelo cliente ao clicar no botão Rejeitar do e-mail. " +
-                             "Valida HMAC, garante idempotência e publica evento para a API de Ordem de Serviço.");
+                             "Valida HMAC, garante idempotência e enfileira evento (via Outbox transacional) " +
+                             "para a API de Ordem de Serviço.");
     }
 
     private static async Task<IResult> RejeitarOrcamento(
@@ -25,7 +25,6 @@ public static class RejeitarOrcamentoWebhookRoute
         [FromQuery] string? motivo,
         [FromServices] IWebhookTokenSigner tokenSigner,
         [FromServices] IWebhookEventRepository webhookEventRepository,
-        [FromServices] IPublishEndpoint publishEndpoint,
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
@@ -35,20 +34,24 @@ public static class RejeitarOrcamentoWebhookRoute
                 "O link clicado é inválido ou expirou. Solicite um novo orçamento ao atendente.");
 
         var externalId = $"{ordemDeServicoId:D}|{Acao}|{ts}";
+        var integrationEvent = new OrcamentoRejeitadoPeloClienteEvent(
+            ordemDeServicoId,
+            timeProvider.GetUtcNow().UtcDateTime,
+            motivo);
+
+        // Atômico: registro de idempotência + enqueue no Outbox no mesmo SaveChanges.
+        // Publicação no RabbitMQ é responsabilidade do OutboxProcessor (background).
         var registered = await webhookEventRepository.TryRegisterAsync(
             scope: "orcamento.rejeicao",
             externalId: externalId,
             status: Acao,
+            integrationEvent: integrationEvent,
             cancellationToken);
 
         if (!registered)
             return WebhookHtmlResponses.Success(
                 "Orçamento já rejeitado",
                 "Esta rejeição já havia sido registrada anteriormente. Você pode fechar esta página.");
-
-        await publishEndpoint.Publish(
-            new OrcamentoRejeitadoPeloClienteEvent(ordemDeServicoId, timeProvider.GetUtcNow().UtcDateTime, motivo),
-            cancellationToken);
 
         return WebhookHtmlResponses.Success(
             "Orçamento rejeitado",

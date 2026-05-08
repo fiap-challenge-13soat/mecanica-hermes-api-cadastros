@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Mecanica.Hermes.Shared.Observability;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -59,6 +60,7 @@ internal static class ObservabilityConfiguration
                 metrics
                     .AddMeter(ActivitySources.ApplicationName)
                     .AddMeter(CadastrosMetrics.MeterName)
+                    .AddMeter(OutboxHealthMetrics.MeterName)
                     .AddAspNetCoreInstrumentation()
                     .AddNpgsqlInstrumentation()
                     .AddHttpClientInstrumentation()

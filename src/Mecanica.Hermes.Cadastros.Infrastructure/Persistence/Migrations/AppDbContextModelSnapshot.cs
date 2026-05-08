@@ -245,6 +245,50 @@ namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Migrations
                     b.ToTable("WebhookEvents", (string)null);
                 });
 
+            modelBuilder.Entity("Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox.OutboxMessageEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTime>("OccurredOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ProcessedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("RetryCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("TraceContext")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OccurredOn")
+                        .HasDatabaseName("IX_OutboxMessages_OccurredOn_Pending")
+                        .HasFilter("\"Status\" = 0");
+
+                    b.ToTable("OutboxMessages", (string)null);
+                });
+
             modelBuilder.Entity("Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Entities.VeiculoEntity", b =>
                 {
                     b.HasOne("Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Entities.ClienteEntity", "Cliente")

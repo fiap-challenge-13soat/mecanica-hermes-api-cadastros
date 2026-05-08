@@ -1,11 +1,13 @@
 using System.Text.RegularExpressions;
 using Mecanica.Hermes.Cadastros.Application.Common.Persistence;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Events;
+using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.UnitOfWork;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
 using Npgsql;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.DependencyInjection;
@@ -48,6 +50,20 @@ internal static partial class ServiceCollectionExtensions
                 b => b.MigrationsAssembly(typeof(IInfrastructureAssemblyMarker).Namespace)
                     .MigrationsHistoryTable("__EFMigrationsHistory", "public"));
         });
+
+        AddOutbox(services);
+    }
+
+    private static void AddOutbox(IServiceCollection services)
+    {
+        // Outbox: lê config de OUTBOX__* env vars (PollInterval, BatchSize, MaxRetries,
+        // ProcessedRetention, AllowNonLockingFallback). Defaults em OutboxOptions.
+        services.AddOptions<OutboxOptions>()
+            .BindConfiguration("Outbox");
+
+        services.AddSingleton<OutboxHealthMetrics>();
+        services.AddHostedService<OutboxProcessor>();
+        services.AddHostedService<OutboxCleanupService>();
     }
 
     private static string BuildSpanName(string sql)
