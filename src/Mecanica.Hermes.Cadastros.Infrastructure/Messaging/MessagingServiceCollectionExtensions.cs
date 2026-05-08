@@ -22,6 +22,12 @@ internal static class MessagingServiceCollectionExtensions
         var queuePrefix = Environment.GetEnvironmentVariable(VariableNames.MassTransitQueueNamePrefix)
                           ?? "mecanica-hermes-cadastros";
 
+        // DLQ observability: o observer captura `ConsumeFault` (após retries esgotados) e
+        // emite métrica `messaging.consume_faults` + log estruturado. Permite alarmar quando
+        // mensagens caem em massa na _error queue (sinal de bug, schema drift, dep down).
+        services.AddSingleton<DlqMetrics>();
+        services.AddSingleton<MessagingFaultObserver>();
+
         services.AddMassTransit(x =>
         {
             x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: queuePrefix, includeNamespace: false));
@@ -47,6 +53,7 @@ internal static class MessagingServiceCollectionExtensions
                 {
                     cfg.Host(new Uri(connectionString));
                     cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(2)));
+                    cfg.ConnectConsumeObserver(context.GetRequiredService<MessagingFaultObserver>());
                     cfg.ConfigureEndpoints(context);
                 });
             }
@@ -55,6 +62,7 @@ internal static class MessagingServiceCollectionExtensions
                 x.UsingInMemory((context, cfg) =>
                 {
                     cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(2)));
+                    cfg.ConnectConsumeObserver(context.GetRequiredService<MessagingFaultObserver>());
                     cfg.ConfigureEndpoints(context);
                 });
             }
