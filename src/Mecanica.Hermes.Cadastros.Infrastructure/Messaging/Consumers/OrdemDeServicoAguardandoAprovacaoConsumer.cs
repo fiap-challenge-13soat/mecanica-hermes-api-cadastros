@@ -20,7 +20,7 @@ namespace Mecanica.Hermes.Cadastros.Infrastructure.Messaging.Consumers;
 ///     (status incorreto, cliente inexistente) são logados como warning e a mensagem é
 ///     descartada — não há retry em erros determinísticos.
 /// </remarks>
-public sealed class OrdemDeServicoAguardandoAprovacaoConsumer(
+public sealed partial class OrdemDeServicoAguardandoAprovacaoConsumer(
     ISender sender,
     ILogger<OrdemDeServicoAguardandoAprovacaoConsumer> logger)
     : IConsumer<OrdemDeServicoAguardandoAprovacaoEvent>
@@ -34,11 +34,20 @@ public sealed class OrdemDeServicoAguardandoAprovacaoConsumer(
             context.CancellationToken);
 
         if (result.IsFailure)
-            logger.LogWarning(
-                "Envio de orçamento da OS {OrdemDeServicoId} ignorado pelo consumer. " +
-                "Status: {StatusCode}. Erros: {Errors}",
+            LogEnvioIgnorado(
+                logger,
                 ordemServicoId,
                 result.StatusCode,
                 string.Join("; ", result.Errors));
     }
+
+    [LoggerMessage(
+        Level = LogLevel.Warning,
+        Message = "Envio de orçamento da OS {OrdemDeServicoId} ignorado pelo consumer. "
+                  + "Status: {StatusCode}. Erros: {Errors}")]
+    private static partial void LogEnvioIgnorado(
+        ILogger logger,
+        Guid ordemDeServicoId,
+        System.Net.HttpStatusCode statusCode,
+        string errors);
 }
