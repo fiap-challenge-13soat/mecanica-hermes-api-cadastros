@@ -4,7 +4,7 @@ using Mecanica.Hermes.Cadastros.Application.Common.Messaging;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Mappings;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Ports;
-using Mecanica.Hermes.Cadastros.Domain.Common.Results;
+using Mecanica.Hermes.Shared.Core.Results;
 using Mecanica.Hermes.Cadastros.Domain.Produtos;
 using MediatR;
 

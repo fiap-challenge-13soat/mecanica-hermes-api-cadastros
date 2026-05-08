@@ -1,7 +1,7 @@
-using Mecanica.Hermes.Cadastros.Application.Common.Exceptions;
 using Mecanica.Hermes.Cadastros.Application.Common.Persistence;
 using Mecanica.Hermes.Cadastros.Domain.Common.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using ConcurrencyConflictException = Mecanica.Hermes.Shared.Core.Persistence.ConcurrencyConflictException;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.UnitOfWork;
 

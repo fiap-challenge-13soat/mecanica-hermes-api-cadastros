@@ -1,4 +1,4 @@
-using Mecanica.Hermes.Cadastros.Domain.Common.Pagination;
+using Mecanica.Hermes.Shared.Core.Pagination;
 
 namespace Mecanica.Hermes.Cadastros.Application.Tests.Common.Pagination;
 

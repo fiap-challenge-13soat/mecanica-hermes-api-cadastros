@@ -29,6 +29,9 @@ jobs:
           restore-keys: nuget-${{ runner.os }}-
 
       - name: Restaurar pacotes
+        env:
+          GITHUB_USERNAME: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet restore Mecanica.Hermes.Cadastros.slnx
 
       - name: Build

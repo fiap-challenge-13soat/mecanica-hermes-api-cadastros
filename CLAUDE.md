@@ -25,11 +25,41 @@ This repository is **one of five** in the Mecânica Hermes ecosystem. They live 
   Validação por HMAC via `WEBHOOK__SIGNING_SECRET` + dedup por `webhook_event_id` na tabela
   `webhook_events`.
 
-### Shared SDK status (em adoção)
+### Shared SDK adotado (v1.0.0)
 
-PR #1 do `mecanica-hermes-shared-sdk` ainda **não foi mergeado** quando este CLAUDE.md foi escrito.
-Quando for: 6 pacotes NuGet substituirão ~700 linhas duplicadas entre os 3 repos. Até lá,
-**não mover código para o SDK** sem alinhar com o usuário primeiro.
+Cadastros consome 5 dos 6 pacotes publicados em GitHub Packages na org `fiap-challenge-13soat`:
+
+| Pacote | Onde é usado |
+|---|---|
+| `Mecanica.Hermes.Shared.Core` | `Result<T>`, `BaseDomain` (extendido localmente com `IsDeleted`), `IDomainEvent`, `IUnitOfWork`, `ConcurrencyConflictException`, `PaginationParams`, `PagedResult`, `EnvironmentNames` |
+| `Mecanica.Hermes.Shared.Application` | `LoggingBehavior` |
+| `Mecanica.Hermes.Shared.AspNetCore` | `CorrelationIdMiddleware`, `DevelopmentAuthenticationMiddleware`, `ApiProblemDetails`, `HealthCheckTags` |
+| `Mecanica.Hermes.Shared.Observability` | `ActivitySources` (source `MecanicaHermes.Api`) |
+| `Mecanica.Hermes.Contracts` | 4 events `.v1` (consome `OrdemDeServicoAguardandoAprovacaoEvent`/`LinkPagamentoGeradoEvent`; publica `OrcamentoAprovadoPeloClienteEvent`/`OrcamentoRejeitadoPeloClienteEvent`) |
+
+`Mecanica.Hermes.Shared.MassTransit` **não é consumido** — Cadastros não usa MassTransit Sagas e o pacote ainda é skeleton/Tier 2.
+
+**Fica local (Tier 2)** porque há divergência intencional do SDK:
+- `Domain/Common/Abstractions/BaseDomain.cs` — herda do SDK e adiciona `IsDeleted`/`MarkAsDeleted` (soft delete)
+- `Domain/Common/Abstractions/AggregateRoot.cs` — herda local BaseDomain (preserva soft delete na hierarquia)
+- `Domain/Common/Abstractions/IDomainEvent.cs` — extende `Shared.Core.Domain.IDomainEvent` **+ MediatR.INotification` para que o `MediatorDomainEventDispatcher` continue funcionando
+- `Application/Common/Persistence/IUnitOfWork.cs` — assina sobre `local.AggregateRoot` (não o do SDK) por causa do soft delete
+- `Application/Common/Behaviors/TracingBehavior.cs` — Tier 2; usa source local `MecanicaHermes.Cadastros.Application`
+- `Api/Middleware/GlobalExceptionHandlerMiddleware.cs` + `MiddlewareExtensions.UseGlobalExceptionHandler` — switch de exceções específico do repo
+
+### nuget.config — credenciais para baixar do SDK
+
+Restore em local/CI requer:
+
+```bash
+$env:GITHUB_USERNAME = "<seu-handle>"
+$env:GITHUB_TOKEN    = "<PAT classic com read:packages + SSO autorizado para fiap-challenge-13soat>"
+dotnet restore
+```
+
+**Limitação GitHub conhecida**: fine-grained PATs **não autenticam** contra `nuget.pkg.github.com` — gera 401 independente das permissões marcadas. Use **classic PAT**.
+
+Em CI o `GITHUB_TOKEN` injetado pelo Actions já tem `packages: read` quando a permission do workflow declara — os 4 workflows do repo já estão com isso configurado. No `Dockerfile` os mesmos valores entram via `--build-arg GITHUB_USERNAME=... --build-arg GITHUB_TOKEN=...`, propagados pelo `docker-ci.yml`.
 
 ### Diferença frente a OS/Pagamentos
 
@@ -38,7 +68,7 @@ Quando for: 6 pacotes NuGet substituirão ~700 linhas duplicadas entre os 3 repo
   indisponível entre o commit e o publish, o evento se perde. Migração para Outbox EF Core
   está prevista na Fase 4 do roadmap (resiliência crítica).
 - **Sem SAGA**: este serviço é puramente reativo. Não orquestra estado de máquina.
-- **`BaseDomain` estendido com `IsDeleted`**: soft delete. OS/Pagamentos usam a versão sem.
+- **`BaseDomain` estendido com `IsDeleted`**: soft delete. Local `BaseDomain` herda do SDK e adiciona o campo. OS/Pagamentos usam direto o do SDK.
 
 ## Commands
 

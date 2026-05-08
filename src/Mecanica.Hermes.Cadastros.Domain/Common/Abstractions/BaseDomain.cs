@@ -1,4 +1,4 @@
-using Mecanica.Hermes.Cadastros.Domain.Common.Clock;
+using Mecanica.Hermes.Shared.Core.Domain;
 
 namespace Mecanica.Hermes.Cadastros.Domain.Common.Abstractions;
 

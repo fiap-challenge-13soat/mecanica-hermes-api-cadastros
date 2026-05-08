@@ -1,5 +1,6 @@
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Cadastros.Domain.Common.Pagination;
+using Mecanica.Hermes.Shared.AspNetCore.Presenter;
+using Mecanica.Hermes.Shared.Core.Pagination;
 using Microsoft.AspNetCore.Http;
 
 namespace Mecanica.Hermes.Cadastros.Api.Tests.Presenter;

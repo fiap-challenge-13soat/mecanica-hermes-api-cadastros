@@ -7,8 +7,11 @@ using Mecanica.Hermes.Cadastros.Api.Endpoints.Notificacoes;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Webhooks;
 using Mecanica.Hermes.Cadastros.Api.Middleware;
-using Mecanica.Hermes.Cadastros.Domain.Common;
 using Mecanica.Hermes.Cadastros.Infrastructure.DependencyInjection;
+using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
+using Mecanica.Hermes.Shared.AspNetCore;
+using Mecanica.Hermes.Shared.AspNetCore.Middleware;
+using Mecanica.Hermes.Shared.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -114,7 +117,10 @@ app.MapOpenApi();
 app.MapScalarApiReference();
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == EnvironmentNames.Testing)
 {
-    app.UseDevelopmentAuthentication();
+    app.UseDevelopmentAuthentication(new DevelopmentAuthenticationOptions
+    {
+        Scopes = [AuthPolicies.OnlyAdminScope, AuthPolicies.AllowClienteScope]
+    });
     app.Logger.LogWarning(
         "DevelopmentAuthenticationMiddleware ENABLED — environment: {Environment}. " +
         "All unauthenticated requests will be granted full access. " +

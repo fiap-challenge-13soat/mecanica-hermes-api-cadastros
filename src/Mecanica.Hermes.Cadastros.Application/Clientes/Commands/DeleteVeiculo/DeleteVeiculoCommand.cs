@@ -1,4 +1,4 @@
-using Mecanica.Hermes.Cadastros.Domain.Common.Results;
+using Mecanica.Hermes.Shared.Core.Results;
 using MediatR;
 
 namespace Mecanica.Hermes.Cadastros.Application.Clientes.Commands.DeleteVeiculo;

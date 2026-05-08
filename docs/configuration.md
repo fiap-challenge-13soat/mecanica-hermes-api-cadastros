@@ -2,6 +2,15 @@
 
 Todas as variáveis usam **double-underscore** (`__`) para mapeamento ASP.NET Core (`IConfiguration`).
 
+## NuGet — GitHub Packages (SDK)
+
+| Variável | Default | Obrigatório | Notas |
+| --- | --- | --- | --- |
+| `GITHUB_USERNAME` | — | **Build/restore** | Handle GitHub do dev (não email). Lido por `nuget.config` para autenticar em `nuget.pkg.github.com/fiap-challenge-13soat`. Em CI vem de `${{ github.actor }}`. |
+| `GITHUB_TOKEN` | — | **Build/restore** | PAT **classic** com escopo `read:packages` + SSO autorizado para a org. Fine-grained PATs **não funcionam** com GitHub Packages NuGet (limitação atual da plataforma). Em CI vem de `${{ secrets.GITHUB_TOKEN }}`. |
+
+> Em runtime (após o build/publish), nenhuma dessas variáveis é necessária — os pacotes já estão restored e empacotados. Só são exigidas durante `dotnet restore`/`dotnet build` (local, CI ou Dockerfile).
+
 ## Banco de dados
 
 | Variável | Default | Obrigatório | Notas |

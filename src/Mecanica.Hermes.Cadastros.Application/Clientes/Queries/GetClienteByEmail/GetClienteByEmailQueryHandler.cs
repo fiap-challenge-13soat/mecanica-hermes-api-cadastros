@@ -2,7 +2,7 @@ using Mecanica.Hermes.Cadastros.Application.Clientes.Dtos;
 using Mecanica.Hermes.Cadastros.Application.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Application.Clientes.Ports;
 using Mecanica.Hermes.Cadastros.Domain.Clientes.ValueObjects;
-using Mecanica.Hermes.Cadastros.Domain.Common.Results;
+using Mecanica.Hermes.Shared.Core.Results;
 using MediatR;
 
 namespace Mecanica.Hermes.Cadastros.Application.Clientes.Queries.GetClienteByEmail;

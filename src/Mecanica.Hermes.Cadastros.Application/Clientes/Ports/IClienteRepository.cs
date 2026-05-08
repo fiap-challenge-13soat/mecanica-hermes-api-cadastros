@@ -1,6 +1,6 @@
 using Mecanica.Hermes.Cadastros.Domain.Clientes;
 using Mecanica.Hermes.Cadastros.Domain.Clientes.ValueObjects;
-using Mecanica.Hermes.Cadastros.Domain.Common.Pagination;
+using Mecanica.Hermes.Shared.Core.Pagination;
 
 namespace Mecanica.Hermes.Cadastros.Application.Clientes.Ports;
 

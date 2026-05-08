@@ -1,6 +1,7 @@
 using System.Reflection;
 using Mecanica.Hermes.Cadastros.Application;
 using Mecanica.Hermes.Cadastros.Application.Common.Behaviors;
+using Mecanica.Hermes.Shared.Application.Behaviors;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 using Mecanica.Hermes.Cadastros.Domain;
 using Mecanica.Hermes.Cadastros.Infrastructure.Emails.DependencyInjection;

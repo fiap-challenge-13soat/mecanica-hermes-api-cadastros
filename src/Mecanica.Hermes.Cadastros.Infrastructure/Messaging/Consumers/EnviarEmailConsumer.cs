@@ -3,7 +3,7 @@ using Mecanica.Hermes.Cadastros.Application.Common.Dtos;
 using Mecanica.Hermes.Cadastros.Application.Common.Messaging;
 using Mecanica.Hermes.Cadastros.Application.Common.Ports;
 using Mecanica.Hermes.Cadastros.Domain.Clientes.ValueObjects;
-using Mecanica.Hermes.Cadastros.Domain.Common.Results;
+using Mecanica.Hermes.Shared.Core.Results;
 using Microsoft.Extensions.Logging;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Messaging.Consumers;

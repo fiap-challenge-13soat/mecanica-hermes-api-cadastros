@@ -1,4 +1,5 @@
 using Mecanica.Hermes.Cadastros.Api.Presenter;
+using Mecanica.Hermes.Shared.AspNetCore.Presenter;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Commands.EnviarLinkPagamento;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;

@@ -1,6 +1,6 @@
 using MassTransit;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Commands.EnviarLinkPagamento;
-using Mecanica.Hermes.Cadastros.Application.Notificacoes.Messages.Events;
+using Mecanica.Hermes.Contracts.Integration;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

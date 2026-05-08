@@ -1,4 +1,4 @@
-using Mecanica.Hermes.Cadastros.Domain.Common.Pagination;
+using Mecanica.Hermes.Shared.Core.Pagination;
 using Mecanica.Hermes.Cadastros.Domain.Produtos;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
 

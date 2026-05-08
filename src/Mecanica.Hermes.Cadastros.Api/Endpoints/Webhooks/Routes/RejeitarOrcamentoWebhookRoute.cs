@@ -1,5 +1,5 @@
 using MassTransit;
-using Mecanica.Hermes.Cadastros.Application.Notificacoes.Messages.Events;
+using Mecanica.Hermes.Contracts.Integration;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
 using Microsoft.AspNetCore.Mvc;
 

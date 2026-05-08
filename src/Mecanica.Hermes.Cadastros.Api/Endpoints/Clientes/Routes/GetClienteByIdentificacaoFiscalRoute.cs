@@ -1,6 +1,7 @@
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Contracts;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Clientes.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
+using Mecanica.Hermes.Shared.AspNetCore.Presenter;
 using Mecanica.Hermes.Cadastros.Application.Clientes.Queries.GetClienteByIdentificacaoFiscal;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using MediatR;

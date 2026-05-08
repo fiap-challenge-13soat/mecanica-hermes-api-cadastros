@@ -1,6 +1,6 @@
 using Mecanica.Hermes.Cadastros.Domain.Clientes.ValueObjects;
 using Mecanica.Hermes.Cadastros.Domain.Common.Abstractions;
-using Mecanica.Hermes.Cadastros.Domain.Common.Results;
+using Mecanica.Hermes.Shared.Core.Results;
 
 namespace Mecanica.Hermes.Cadastros.Domain.Clientes;
 
