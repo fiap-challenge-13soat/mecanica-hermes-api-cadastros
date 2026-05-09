@@ -32,6 +32,7 @@ Verifica:
 - Linhas com mais de **120 colunas** (regra do `.editorconfig`)
 
 Em caso de falha, exibe sugestão de correção:
+
 ```bash
 dotnet format Mecanica.Hermes.Cadastros.slnx
 ```
@@ -72,3 +73,5 @@ Configure em **Settings → Secrets → Actions** do repositório:
 | `DOCKER_PASSWORD` | `docker-ci.yml` | Token Docker Hub |
 | `SONAR_TOKEN` | `sonarqube-ci.yml` | Token SonarCloud |
 | `K8S_REPO_PAT` | `k8s-trigger-cd.yml` | GitHub PAT com `workflow` scope no repo K8s |
+| `MEDIATR__LICENSEKEY` | `docker-ci.yml` e `sonarqube-ci.yml` | Licença para Compilar o projeto com Mediatr |
+| `PACKAGES_TOKEN` | `docker-ci.yml` e `sonarqube-ci.yml` | Token de acesso aos pacotes Nuget do `Mecanica.Hermes.*` |
