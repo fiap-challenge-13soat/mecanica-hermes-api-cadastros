@@ -68,7 +68,7 @@ dotnet restore
 
 **Limitação GitHub conhecida**: fine-grained PATs **não autenticam** contra `nuget.pkg.github.com` — gera 401 independente das permissões marcadas. Use **classic PAT**.
 
-Em CI o `GITHUB_TOKEN` injetado pelo Actions já tem `packages: read` quando a permission do workflow declara — os 4 workflows do repo já estão com isso configurado. No `Dockerfile` os mesmos valores entram via `--build-arg GITHUB_USERNAME=... --build-arg GITHUB_TOKEN=...`, propagados pelo `docker-ci.yml`.
+Em CI o `GITHUB_TOKEN` injetado pelo Actions já tem `packages: read` quando a permission do workflow declara — os 4 workflows do repo já estão com isso configurado. No `Dockerfile`, `GITHUB_USERNAME` entra como `--build-arg` e `GITHUB_TOKEN` entra como BuildKit secret (`id=github_token`, lido via `--mount=type=secret`) para não ser gravado em camadas/cache da imagem; o `docker-ci.yml` propaga ambos.
 
 ### Diferença frente a OS/Pagamentos
 
