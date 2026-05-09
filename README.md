@@ -1,5 +1,18 @@
 # Mecânica Hermes — API de Cadastros
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)](https://www.postgresql.org/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-FF6600)](https://www.rabbitmq.com/)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=alert_status&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=coverage&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=sqale_rating&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=reliability_rating&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=security_rating&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+
+---
+
 Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos**) e de **Produtos** / **Serviços**, além do envio de **e-mails** ao cliente via MailKit e do **webhook** de aprovação/rejeição de orçamento. Faz parte do ecossistema composto por três microsserviços:
 
 | Serviço | Repositório |
@@ -19,7 +32,7 @@ Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos*
 
 ## Estrutura (Clean Architecture)
 
-```
+```text
 src/
   Mecanica.Hermes.Cadastros.Domain/          Aggregates, Value Objects, Domain Events
   Mecanica.Hermes.Cadastros.Application/     Commands/Queries (MediatR), DTOs, Ports
