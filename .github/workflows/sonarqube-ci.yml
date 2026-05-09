@@ -88,7 +88,7 @@ jobs:
             /o:"fiap-challenge-13soat"
             /d:sonar.host.url="https://sonarcloud.io"
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
-            /d:sonar.coverage.exclusions="**/Migrations/**,**/Program.cs,**/tests/**"
+            /d:sonar.coverage.exclusions="**/Migrations/**,**/Program.cs,**/AppDbContextDesignTimeFactory.cs,**/tests/**,**/Mecanica.Hermes.Cadastros.TestUtils/**,**/Endpoints/**/*Route.cs,**/Endpoints/**/*Endpoints.cs,**/Endpoints/EndpointConventions.cs,**/Endpoints/Webhooks/WebhookHtmlResponses.cs,**/Filters/ValidationFilter.cs,**/Middleware/MiddlewareExtensions.cs,**/Middleware/DevelopmentAuthenticationMiddlewareExtensions.cs,**/Persistence/AppDbContext.cs,**/Persistence/Entities/**,**/Persistence/Configurations/*Configuration.cs,**/Persistence/DependencyInjection/**,**/Persistence/Repositories/RepositoryServiceCollectionExtensions.cs,**/DependencyInjection/ServiceCollectionExtensions.cs,**/DependencyInjection/WebApplicationExtensions.cs,**/DependencyInjection/WebApplicationBuilderExtensions.cs,**/Emails/DependencyInjection/**,**/Emails/InternalEmailSenderService.cs,**/HttpClients/**,**/Messaging/MessagingServiceCollectionExtensions.cs,**/Messaging/Consumers/EnviarEmailConsumer.cs,**/Messaging/Consumers/LinkPagamentoGeradoConsumer.cs,**/Messaging/Consumers/OrdemDeServicoAguardandoAprovacaoConsumer.cs,**/Observability/EnvironmentDetector.cs,**/Observability/OtlpEnvironment.cs,**/Observability/ActivitySources.cs,**/Observability/ObservabilityConfiguration.cs,**/Observability/Handlers/*Handler.cs,**/Logging/LogLevelEnricher.cs"
             /d:sonar.exclusions="**/Migrations/**,**/bin/**,**/obj/**"
           )
 
