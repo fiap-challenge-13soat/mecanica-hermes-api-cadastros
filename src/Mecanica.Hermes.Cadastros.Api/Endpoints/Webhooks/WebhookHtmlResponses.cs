@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http;
-
 namespace Mecanica.Hermes.Cadastros.Api.Endpoints.Webhooks;
 
 internal static class WebhookHtmlResponses

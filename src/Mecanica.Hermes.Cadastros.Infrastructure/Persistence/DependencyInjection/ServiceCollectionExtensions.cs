@@ -7,7 +7,6 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
 using Npgsql;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.DependencyInjection;

@@ -5,7 +5,6 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Mecanica.Hermes.Cadastros.IntegrationTests.Infrastructure;
 using Mecanica.Hermes.Contracts.Integration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Mecanica.Hermes.Cadastros.IntegrationTests.Persistence;
 

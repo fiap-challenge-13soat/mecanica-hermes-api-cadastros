@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-
 namespace Mecanica.Hermes.Cadastros.Api.Middleware;
 
 public static class MiddlewareExtensions

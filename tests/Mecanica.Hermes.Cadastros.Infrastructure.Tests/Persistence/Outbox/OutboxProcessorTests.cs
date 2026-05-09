@@ -5,7 +5,6 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Persistence;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Mecanica.Hermes.Contracts.Integration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
