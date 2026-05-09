@@ -1,5 +1,18 @@
 # Mecânica Hermes — API de Cadastros
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-336791)](https://www.postgresql.org/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-4-FF6600)](https://www.rabbitmq.com/)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=alert_status&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=coverage&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=sqale_rating&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=reliability_rating&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=security_rating&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
+
+---
+
 Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos**) e de **Produtos** / **Serviços**, além do envio de **e-mails** ao cliente via MailKit e do **webhook** de aprovação/rejeição de orçamento. Faz parte do ecossistema composto por três microsserviços:
 
 | Serviço | Repositório |
@@ -19,7 +32,7 @@ Microsserviço responsável pelo cadastro de **Clientes** (com seus **Veículos*
 
 ## Estrutura (Clean Architecture)
 
-```
+```text
 src/
   Mecanica.Hermes.Cadastros.Domain/          Aggregates, Value Objects, Domain Events
   Mecanica.Hermes.Cadastros.Application/     Commands/Queries (MediatR), DTOs, Ports
@@ -125,12 +138,3 @@ Para o fluxo completo, consulte [`docs/messaging.md`](./docs/messaging.md).
 | [`docs/ci-cd.md`](./docs/ci-cd.md) | GitHub Actions, secrets, deploy |
 | [`docs/runbook.md`](./docs/runbook.md) | Diagnóstico e resolução de problemas |
 | [`docs/adrs.md`](./docs/adrs.md) | Decisões de arquitetura (ADRs 001–006) |
-
-## Roadmap
-
-- ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit)
-- ✅ **Fase 1.1** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter
-- ✅ **Fase 2** — Consumer + envio de orçamento ao cliente (integração com API de OS)
-- ✅ **Fase 3** — Consumer + envio de link de pagamento (integração com API de Pagamentos)
-- ✅ **Fase 4** — Webhook HMAC SHA-256 para aprovação/rejeição de orçamento
-- ✅ **Fase 5** — Integração cross-service: `[EntityName]` canônico, `servico-scope` M2M, publicação de `OrcamentoAprovadoPeloClienteEvent` / `OrcamentoRejeitadoPeloClienteEvent`
