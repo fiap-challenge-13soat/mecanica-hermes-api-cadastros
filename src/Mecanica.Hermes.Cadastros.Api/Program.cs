@@ -154,6 +154,3 @@ await app.MigrateDatabaseAsync();
 
 await app.RunAsync();
 
-#pragma warning disable CA1050
-public partial class Program;
-#pragma warning restore CA1050

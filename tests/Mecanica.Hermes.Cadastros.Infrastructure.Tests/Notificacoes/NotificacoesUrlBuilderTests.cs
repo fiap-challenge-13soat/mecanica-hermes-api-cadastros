@@ -48,13 +48,14 @@ public sealed class NotificacoesUrlBuilderTests : IDisposable
     }
 
     [Fact]
-    public void BaseUrlAusente_UsaLocalhostDefault()
+    public void BaseUrlAusente_LancaInvalidOperationException()
     {
         Environment.SetEnvironmentVariable("APP__BASE_URL", null);
         var signer = new Mock<IWebhookTokenSigner>();
-        signer.Setup(s => s.Sign(It.IsAny<Guid>(), It.IsAny<string>())).Returns(("t", 1L));
-        var builder = new NotificacoesUrlBuilder(signer.Object);
 
-        builder.BuildAprovacaoUrl(Guid.NewGuid()).Should().StartWith("http://localhost:5000/");
+        Action act = () => _ = new NotificacoesUrlBuilder(signer.Object);
+
+        act.Should().Throw<InvalidOperationException>()
+            .WithMessage("*APP__BASE_URL*");
     }
 }

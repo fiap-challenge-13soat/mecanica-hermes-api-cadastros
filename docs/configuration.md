@@ -62,7 +62,7 @@ Todas as variáveis usam **double-underscore** (`__`) para mapeamento ASP.NET Co
 | Variável | Default | Obrigatório | Notas |
 | --- | --- | --- | --- |
 | `WEBHOOK__SIGNING_SECRET` | — | **Sim** (fase 4+) | Segredo HMAC-SHA256 (mínimo 32 bytes). Usado para assinar e validar links de aprovação/rejeição |
-| `APP__BASE_URL` | `http://localhost:5000` | Não | URL base pública desta API. Usada para construir os links nos e-mails enviados ao cliente |
+| `APP__BASE_URL` | — | **Sim** | URL base pública desta API. Usada para construir os links nos e-mails enviados ao cliente. Sem ela o `NotificacoesUrlBuilder` falha no startup |
 
 ## Observabilidade
 
