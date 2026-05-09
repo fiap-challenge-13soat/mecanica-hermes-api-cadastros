@@ -14,7 +14,11 @@ internal sealed class NotificacoesUrlBuilder(IWebhookTokenSigner tokenSigner) : 
     private const string AcaoRejeitar = "rejeitar";
 
     private readonly string _baseUrl =
-        (Environment.GetEnvironmentVariable(VariableNames.AppBaseUrl) ?? "http://localhost:5000").TrimEnd('/');
+        (Environment.GetEnvironmentVariable(VariableNames.AppBaseUrl)
+         ?? throw new InvalidOperationException(
+             $"A variável de ambiente '{VariableNames.AppBaseUrl}' é obrigatória "
+             + "para construir as URLs dos webhooks de orçamento."))
+        .TrimEnd('/');
 
     public string BuildAprovacaoUrl(Guid ordemDeServicoId) => Build(ordemDeServicoId, AcaoAprovar);
 
