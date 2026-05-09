@@ -64,5 +64,5 @@ nunit-*.xml
 .temp/
 .claude/
 coverage-report/
-src/Mecanica.Hermes.Api/Properties/launchSettings.dev.json
-src/Mecanica.Hermes.Api/Properties/launchSettings.json
+src/Mecanica.Hermes.Cadastros.Api/Properties/launchSettings.dev.json
+src/Mecanica.Hermes.Cadastros.Api/Properties/launchSettings.json
