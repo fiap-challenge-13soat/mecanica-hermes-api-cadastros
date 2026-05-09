@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791)](https://www.postgresql.org/)
-[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-FF6600)](https://www.rabbitmq.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-336791)](https://www.postgresql.org/)
+[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-4-FF6600)](https://www.rabbitmq.com/)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=alert_status&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=fiap-challenge-13soat_mecanica-hermes-cadastros&metric=coverage&token=71b077675868d45c85c3f6a512e5ac8d9cc2f8d2)](https://sonarcloud.io/summary/new_code?id=fiap-challenge-13soat_mecanica-hermes-cadastros)
