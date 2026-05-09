@@ -15,7 +15,8 @@ internal static class HttpClientsServiceCollectionExtensions
             {
                 var baseUrl = Environment.GetEnvironmentVariable(VariableNames.OrdemServicoApiBaseUrl)
                               ?? throw new InvalidOperationException(
-                                  $"{VariableNames.OrdemServicoApiBaseUrl} é obrigatória para acionar a API de Ordem de Serviço.");
+                                  $"{VariableNames.OrdemServicoApiBaseUrl} é obrigatória "
+                                  + "para acionar a API de Ordem de Serviço.");
                 client.BaseAddress = new Uri(baseUrl);
                 client.Timeout = TimeSpan.FromSeconds(30);
             })
@@ -25,7 +26,8 @@ internal static class HttpClientsServiceCollectionExtensions
             {
                 var baseUrl = Environment.GetEnvironmentVariable(VariableNames.PagamentoApiBaseUrl)
                               ?? throw new InvalidOperationException(
-                                  $"{VariableNames.PagamentoApiBaseUrl} é obrigatória para acionar a API de Pagamentos.");
+                                  $"{VariableNames.PagamentoApiBaseUrl} é obrigatória "
+                                  + "para acionar a API de Pagamentos.");
                 client.BaseAddress = new Uri(baseUrl);
                 client.Timeout = TimeSpan.FromSeconds(30);
             })

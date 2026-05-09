@@ -1,9 +1,9 @@
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Contracts;
 using Mecanica.Hermes.Cadastros.Api.Endpoints.Produtos.Mappings;
 using Mecanica.Hermes.Cadastros.Api.Presenter;
-using Mecanica.Hermes.Shared.AspNetCore.Presenter;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Queries.ListAllServicos;
 using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
+using Mecanica.Hermes.Shared.AspNetCore.Presenter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

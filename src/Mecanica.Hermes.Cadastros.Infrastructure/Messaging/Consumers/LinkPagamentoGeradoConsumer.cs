@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Messaging.Consumers;
 
-public sealed class LinkPagamentoGeradoConsumer(
+public sealed partial class LinkPagamentoGeradoConsumer(
     ISender sender,
     ILogger<LinkPagamentoGeradoConsumer> logger)
     : IConsumer<LinkPagamentoGeradoEvent>
@@ -20,11 +20,20 @@ public sealed class LinkPagamentoGeradoConsumer(
             context.CancellationToken);
 
         if (result.IsFailure)
-            logger.LogWarning(
-                "Envio de link do pagamento {PagamentoId} ignorado pelo consumer. " +
-                "Status: {StatusCode}. Erros: {Errors}",
+            LogEnvioIgnorado(
+                logger,
                 pagamentoId,
                 result.StatusCode,
                 string.Join("; ", result.Errors));
     }
+
+    [LoggerMessage(
+        Level = LogLevel.Warning,
+        Message = "Envio de link do pagamento {PagamentoId} ignorado pelo consumer. "
+                  + "Status: {StatusCode}. Erros: {Errors}")]
+    private static partial void LogEnvioIgnorado(
+        ILogger logger,
+        Guid pagamentoId,
+        System.Net.HttpStatusCode statusCode,
+        string errors);
 }

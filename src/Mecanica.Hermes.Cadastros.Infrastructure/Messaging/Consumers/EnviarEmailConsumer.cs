@@ -3,7 +3,6 @@ using Mecanica.Hermes.Cadastros.Application.Common.Dtos;
 using Mecanica.Hermes.Cadastros.Application.Common.Messaging;
 using Mecanica.Hermes.Cadastros.Application.Common.Ports;
 using Mecanica.Hermes.Cadastros.Domain.Clientes.ValueObjects;
-using Mecanica.Hermes.Shared.Core.Results;
 using Microsoft.Extensions.Logging;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Messaging.Consumers;
@@ -14,7 +13,7 @@ namespace Mecanica.Hermes.Cadastros.Infrastructure.Messaging.Consumers;
 ///     (ex.: handlers de notificação) do envio síncrono ao SMTP — ganhamos retry,
 ///     redelivery e isolamento de falhas via MassTransit.
 /// </summary>
-public sealed class EnviarEmailConsumer(
+public sealed partial class EnviarEmailConsumer(
     IEmailSenderService emailSender,
     ILogger<EnviarEmailConsumer> logger) : IConsumer<EnviarEmailCommand>
 {
@@ -25,12 +24,15 @@ public sealed class EnviarEmailConsumer(
         var emailResult = EmailVo.Criar(msg.To);
         if (emailResult.IsFailure || emailResult.Data is null)
         {
-            logger.LogWarning(
-                "EnviarEmailCommand descartado — endereco invalido. Erros: {Errors}",
-                string.Join("; ", emailResult.Errors));
+            LogEnderecoInvalido(logger, string.Join("; ", emailResult.Errors));
             return;
         }
 
         await emailSender.SendAsync(new EmailMessage(emailResult.Data, msg.Subject, msg.Body));
     }
+
+    [LoggerMessage(
+        Level = LogLevel.Warning,
+        Message = "EnviarEmailCommand descartado — endereco invalido. Erros: {Errors}")]
+    private static partial void LogEnderecoInvalido(ILogger logger, string errors);
 }

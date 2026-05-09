@@ -14,11 +14,11 @@ internal sealed class ListClientesByNomeQueryHandler(IClienteRepository reposito
         CancellationToken cancellationToken)
     {
         var paginationParams = new PaginationParams { Page = request.Page, PageSize = request.PageSize };
-        
+
         var pagedClientes = await repository.ListByNomeAsync(request.Nome, paginationParams);
-        
+
         var clienteDtos = pagedClientes.Items.Select(c => c.ToDto()).ToList();
-        
+
         var pagedResult = PagedResult<ClienteDto>.Create(
             clienteDtos,
             pagedClientes.Page,

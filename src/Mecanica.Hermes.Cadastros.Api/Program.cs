@@ -12,15 +12,9 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Settings;
 using Mecanica.Hermes.Shared.AspNetCore;
 using Mecanica.Hermes.Shared.AspNetCore.Middleware;
 using Mecanica.Hermes.Shared.Core;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Scalar.AspNetCore;
 using IPNetwork = System.Net.IPNetwork;
 

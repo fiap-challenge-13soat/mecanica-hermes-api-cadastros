@@ -6,7 +6,7 @@
 
 Todos os endpoints (exceto webhooks e health) exigem **JWT Bearer**. O token deve ser enviado no header:
 
-```
+```text
 Authorization: Bearer <token>
 ```
 

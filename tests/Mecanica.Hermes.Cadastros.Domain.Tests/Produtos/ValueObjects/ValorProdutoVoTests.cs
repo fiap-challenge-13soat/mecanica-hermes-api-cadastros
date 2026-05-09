@@ -1,4 +1,3 @@
-using System.Globalization;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
 
 namespace Mecanica.Hermes.Cadastros.Domain.Tests.Produtos.ValueObjects;

@@ -23,7 +23,7 @@ public sealed class PlacaVo
         if (string.IsNullOrWhiteSpace(valor))
             return Result<PlacaVo>.BadRequest("A placa não pode ser vazia.");
 
-        var normalizado = valor.ToUpper().Trim().Replace("-", "");
+        var normalizado = valor.ToUpperInvariant().Trim().Replace("-", "");
 
         if (!RegexHelper.FormatoPlaca().IsMatch(normalizado))
             return Result<PlacaVo>.BadRequest("Placa inválida. Formatos aceitos: ABC1234 ou ABC1D23.");

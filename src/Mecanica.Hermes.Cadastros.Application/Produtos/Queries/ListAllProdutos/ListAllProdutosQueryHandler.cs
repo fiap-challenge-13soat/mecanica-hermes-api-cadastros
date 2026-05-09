@@ -14,11 +14,11 @@ internal sealed class ListAllProdutosQueryHandler(IProdutoRepository repository)
         CancellationToken cancellationToken)
     {
         var paginationParams = new PaginationParams { Page = request.Page, PageSize = request.PageSize };
-        
+
         var pagedProdutos = await repository.ListAllAsync(paginationParams);
-        
+
         var produtoDtos = pagedProdutos.Items.Select(p => p.ToDto()).ToList();
-        
+
         var pagedResult = PagedResult<ProdutoDto>.Create(
             produtoDtos,
             pagedProdutos.Page,

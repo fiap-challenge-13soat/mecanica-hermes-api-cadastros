@@ -5,7 +5,6 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Persistence;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Outbox;
 using Mecanica.Hermes.Contracts.Integration;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
@@ -65,7 +64,9 @@ public class OutboxProcessorTests
         return (sut, publishMock, db);
     }
 
-    private static OutboxMessageEntity PendingMessage(string type = "Inexistent.Type, NoAssembly", string payload = "{}")
+    private static OutboxMessageEntity PendingMessage(
+        string type = "Inexistent.Type, NoAssembly",
+        string payload = "{}")
     {
         return new OutboxMessageEntity(Guid.NewGuid(), type, payload, DateTime.UtcNow);
     }

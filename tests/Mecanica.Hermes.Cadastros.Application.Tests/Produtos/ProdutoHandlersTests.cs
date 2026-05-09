@@ -8,9 +8,9 @@ using Mecanica.Hermes.Cadastros.Application.Produtos.Queries.GetProdutoById;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Queries.ListAllProdutos;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Queries.ListProdutosByDescricao;
 using Mecanica.Hermes.Cadastros.Application.Tests.Common;
-using Mecanica.Hermes.Shared.Core.Pagination;
 using Mecanica.Hermes.Cadastros.Domain.Produtos;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
+using Mecanica.Hermes.Shared.Core.Pagination;
 
 namespace Mecanica.Hermes.Cadastros.Application.Tests.Produtos;
 
@@ -66,7 +66,9 @@ public class ProdutoHandlersTests
         _repository.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(produto);
         var handler = new UpdateProdutoCommandHandler(_repository.Object, _uow.Object);
 
-        var result = await handler.Handle(new UpdateProdutoCommand(produto.Id, "Novo Nome", 99m), CancellationToken.None);
+        var result = await handler.Handle(
+            new UpdateProdutoCommand(produto.Id, "Novo Nome", 99m),
+            CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
     }

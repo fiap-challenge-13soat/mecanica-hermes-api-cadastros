@@ -41,6 +41,7 @@
 **Decisão:** Todos os contratos cross-service são decorados com `[EntityName("kebab-case")]`. O roteamento passa a depender do `EntityName`, não do namespace .NET. Cada serviço redeclara o record localmente com o mesmo `EntityName` — sem package compartilhado.
 
 **Exemplo:**
+
 ```csharp
 [EntityName("orcamento.aprovado-pelo-cliente.v1")]
 public sealed record OrcamentoAprovadoPeloClienteEvent(Guid OrdemDeServicoId, DateTime AprovadoEm);

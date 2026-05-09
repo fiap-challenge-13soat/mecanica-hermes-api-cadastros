@@ -25,19 +25,19 @@ public sealed class IdentificacaoFiscalVo
         switch (normalizado.Length)
         {
             case 11:
-            {
-                var result = CpfVo.Criar(valor);
-                return result.IsSuccess
-                    ? Result<IdentificacaoFiscalVo>.Ok(new IdentificacaoFiscalVo(result.Data!.ToString()))
-                    : Result<IdentificacaoFiscalVo>.BadRequest(result.Errors);
-            }
+                {
+                    var result = CpfVo.Criar(valor);
+                    return result.IsSuccess
+                        ? Result<IdentificacaoFiscalVo>.Ok(new IdentificacaoFiscalVo(result.Data!.ToString()))
+                        : Result<IdentificacaoFiscalVo>.BadRequest(result.Errors);
+                }
             case 14:
-            {
-                var result = CnpjVo.Criar(valor);
-                return result.IsSuccess
-                    ? Result<IdentificacaoFiscalVo>.Ok(new IdentificacaoFiscalVo(result.Data!.ToString()))
-                    : Result<IdentificacaoFiscalVo>.BadRequest(result.Errors);
-            }
+                {
+                    var result = CnpjVo.Criar(valor);
+                    return result.IsSuccess
+                        ? Result<IdentificacaoFiscalVo>.Ok(new IdentificacaoFiscalVo(result.Data!.ToString()))
+                        : Result<IdentificacaoFiscalVo>.BadRequest(result.Errors);
+                }
             default:
                 return Result<IdentificacaoFiscalVo>.BadRequest(
                     "A identificação fiscal deve ser um CPF ou CNPJ válido.");

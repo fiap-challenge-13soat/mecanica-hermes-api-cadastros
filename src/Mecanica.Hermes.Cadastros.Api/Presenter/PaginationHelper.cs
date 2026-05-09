@@ -1,5 +1,4 @@
 using Mecanica.Hermes.Shared.Core.Pagination;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Mecanica.Hermes.Cadastros.Api.Presenter;

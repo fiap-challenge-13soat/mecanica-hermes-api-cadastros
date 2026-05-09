@@ -37,7 +37,7 @@ public static class OrcamentoEmailBuilder
 
         var sb = new StringBuilder();
         sb.Append("<!DOCTYPE html><html lang=\"pt-BR\"><body style=\"font-family:Arial,sans-serif;color:#222\">");
-        sb.Append($"<p>Olá, <strong>{saudacao}</strong>,</p>");
+        sb.Append(CultureInfo.InvariantCulture, $"<p>Olá, <strong>{saudacao}</strong>,</p>");
         sb.Append("<p>O orçamento da sua ordem de serviço está disponível e aguarda sua análise.</p>");
         sb.Append("<p><strong>Ordem de Serviço:</strong> ").Append(ordem.Id.ToString("D")).Append("</p>");
         sb.Append("<p><strong>Valor Total Estimado:</strong> ")

@@ -2,8 +2,8 @@ using Mecanica.Hermes.Cadastros.Application.Clientes.Ports;
 using Mecanica.Hermes.Cadastros.Application.Common.Persistence;
 using Mecanica.Hermes.Cadastros.Domain.Clientes;
 using Mecanica.Hermes.Cadastros.Domain.Clientes.ValueObjects;
-using Mecanica.Hermes.Shared.Core.Pagination;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Mappings;
+using Mecanica.Hermes.Shared.Core.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Repositories;

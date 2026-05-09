@@ -26,7 +26,8 @@ public class EnviarLinkPagamentoHandlerTests
         _pagamentoClient.Setup(c => c.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((PagamentoExternalDto?)null);
 
-        var result = await CreateHandler().Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
+        var result = await CreateHandler()
+            .Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
 
         result.IsFailure.Should().BeTrue();
     }
@@ -37,7 +38,8 @@ public class EnviarLinkPagamentoHandlerTests
         _pagamentoClient.Setup(c => c.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NovoPagamento(link: null));
 
-        var result = await CreateHandler().Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
+        var result = await CreateHandler()
+            .Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
 
         result.IsFailure.Should().BeTrue();
     }
@@ -48,7 +50,8 @@ public class EnviarLinkPagamentoHandlerTests
         _pagamentoClient.Setup(c => c.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NovoPagamento(new PagamentoLinkExternalDto("p", "  ")));
 
-        var result = await CreateHandler().Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
+        var result = await CreateHandler()
+            .Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
 
         result.IsFailure.Should().BeTrue();
     }
@@ -59,7 +62,8 @@ public class EnviarLinkPagamentoHandlerTests
         _pagamentoClient.Setup(c => c.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NovoPagamento(new PagamentoLinkExternalDto("p", "https://mp/x"), email: ""));
 
-        var result = await CreateHandler().Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
+        var result = await CreateHandler()
+            .Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
 
         result.IsFailure.Should().BeTrue();
     }
@@ -70,7 +74,8 @@ public class EnviarLinkPagamentoHandlerTests
         _pagamentoClient.Setup(c => c.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(NovoPagamento(new PagamentoLinkExternalDto("p", "https://mp/x")));
 
-        var result = await CreateHandler().Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
+        var result = await CreateHandler()
+            .Handle(new EnviarLinkPagamentoCommand(Guid.NewGuid()), CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         _publish.Verify(p => p.Publish(It.IsAny<EnviarEmailCommand>(), It.IsAny<CancellationToken>()), Times.Once);

@@ -36,7 +36,8 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
         catch (Exception ex)
         {
             throw new InvalidOperationException(
-                $"Failed to run migrations. Connection String: {_dbContainer.GetConnectionString()}. Error: {ex.Message}",
+                $"Failed to run migrations. Connection String: {_dbContainer.GetConnectionString()}. "
+                + $"Error: {ex.Message}",
                 ex);
         }
     }

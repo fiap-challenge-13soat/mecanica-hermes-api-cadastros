@@ -1,12 +1,8 @@
 using System.Net;
 using System.Text.Json;
-using Mecanica.Hermes.Cadastros.Api.Presenter;
 using Mecanica.Hermes.Shared.AspNetCore.Presenter;
 using Mecanica.Hermes.Shared.Core;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Mecanica.Hermes.Cadastros.Api.Middleware;
 

@@ -1,9 +1,9 @@
 using Mecanica.Hermes.Cadastros.Application.Common.Persistence;
 using Mecanica.Hermes.Cadastros.Application.Produtos.Ports;
-using Mecanica.Hermes.Shared.Core.Pagination;
 using Mecanica.Hermes.Cadastros.Domain.Produtos;
 using Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
 using Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Mappings;
+using Mecanica.Hermes.Shared.Core.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Persistence.Repositories;
@@ -19,7 +19,9 @@ internal class ServicoRepository(AppDbContext db, IUnitOfWork uow) : IServicoRep
         return servicoEntity?.ToDomain();
     }
 
-    public async Task<PagedResult<Servico>> ListByDescricaoAsync(DescricaoProdutoVo descricao, PaginationParams paginationParams)
+    public async Task<PagedResult<Servico>> ListByDescricaoAsync(
+        DescricaoProdutoVo descricao,
+        PaginationParams paginationParams)
     {
         var pattern = $"%{descricao.Valor}%";
 

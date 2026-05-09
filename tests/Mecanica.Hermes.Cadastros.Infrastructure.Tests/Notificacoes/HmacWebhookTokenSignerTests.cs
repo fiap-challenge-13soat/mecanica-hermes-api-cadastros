@@ -3,7 +3,7 @@ using Mecanica.Hermes.Cadastros.Infrastructure.Notificacoes;
 namespace Mecanica.Hermes.Cadastros.Infrastructure.Tests.Notificacoes;
 
 [Collection("WebhookSecret")]
-public class HmacWebhookTokenSignerTests : IDisposable
+public sealed class HmacWebhookTokenSignerTests : IDisposable
 {
     public HmacWebhookTokenSignerTests()
     {
@@ -13,6 +13,7 @@ public class HmacWebhookTokenSignerTests : IDisposable
     public void Dispose()
     {
         Environment.SetEnvironmentVariable("WEBHOOK__SIGNING_SECRET", null);
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -90,7 +91,9 @@ public class HmacWebhookTokenSignerTests : IDisposable
     {
         Environment.SetEnvironmentVariable("WEBHOOK__SIGNING_SECRET", null);
 
+#pragma warning disable CA1806 // construtor é o sujeito do teste; instância é descartada de propósito
         Action act = () => new HmacWebhookTokenSigner();
+#pragma warning restore CA1806
 
         act.Should().Throw<InvalidOperationException>();
     }

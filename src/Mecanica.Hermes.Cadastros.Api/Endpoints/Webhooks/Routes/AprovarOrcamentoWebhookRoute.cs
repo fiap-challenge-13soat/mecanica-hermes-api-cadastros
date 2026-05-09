@@ -1,5 +1,5 @@
-using Mecanica.Hermes.Contracts.Integration;
 using Mecanica.Hermes.Cadastros.Application.Notificacoes.Ports;
+using Mecanica.Hermes.Contracts.Integration;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mecanica.Hermes.Cadastros.Api.Endpoints.Webhooks.Routes;

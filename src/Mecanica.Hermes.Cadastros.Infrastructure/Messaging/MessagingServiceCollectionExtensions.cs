@@ -30,7 +30,8 @@ internal static class MessagingServiceCollectionExtensions
 
         services.AddMassTransit(x =>
         {
-            x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: queuePrefix, includeNamespace: false));
+            x.SetEndpointNameFormatter(
+                new KebabCaseEndpointNameFormatter(prefix: queuePrefix, includeNamespace: false));
             x.AddConsumer<EnviarEmailConsumer>();
             x.AddConsumer<OrdemDeServicoAguardandoAprovacaoConsumer>();
             x.AddConsumer<LinkPagamentoGeradoConsumer>();

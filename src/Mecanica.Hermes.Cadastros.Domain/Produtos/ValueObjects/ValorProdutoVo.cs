@@ -1,3 +1,4 @@
+using System.Globalization;
 using Mecanica.Hermes.Shared.Core.Results;
 
 namespace Mecanica.Hermes.Cadastros.Domain.Produtos.ValueObjects;
@@ -15,7 +16,7 @@ public sealed class ValorProdutoVo
     }
 
     public decimal Valor { get; private set; }
-    public override string ToString() => Valor.ToString();
+    public override string ToString() => Valor.ToString(CultureInfo.InvariantCulture);
 
     public static Result<ValorProdutoVo> Criar(decimal valor)
     {
