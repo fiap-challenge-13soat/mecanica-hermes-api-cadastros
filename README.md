@@ -125,12 +125,3 @@ Para o fluxo completo, consulte [`docs/messaging.md`](./docs/messaging.md).
 | [`docs/ci-cd.md`](./docs/ci-cd.md) | GitHub Actions, secrets, deploy |
 | [`docs/runbook.md`](./docs/runbook.md) | Diagnóstico e resolução de problemas |
 | [`docs/adrs.md`](./docs/adrs.md) | Decisões de arquitetura (ADRs 001–006) |
-
-## Roadmap
-
-- ✅ **Fase 1** — CRUD de Clientes/Produtos/Serviços + serviço de e-mail (MailKit)
-- ✅ **Fase 1.1** — MapperExtensions, MassTransit, IDomainEventDispatcher + OTel meter
-- ✅ **Fase 2** — Consumer + envio de orçamento ao cliente (integração com API de OS)
-- ✅ **Fase 3** — Consumer + envio de link de pagamento (integração com API de Pagamentos)
-- ✅ **Fase 4** — Webhook HMAC SHA-256 para aprovação/rejeição de orçamento
-- ✅ **Fase 5** — Integração cross-service: `[EntityName]` canônico, `servico-scope` M2M, publicação de `OrcamentoAprovadoPeloClienteEvent` / `OrcamentoRejeitadoPeloClienteEvent`
