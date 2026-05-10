@@ -100,6 +100,8 @@ Cobertura mínima exigida pelo CI: **≥ 80%** de linhas. Veja [`docs/testing.md
 
 ## Docker
 
+### Imagem isolada
+
 ```bash
 docker build -t mecanica-hermes-cadastros:dev .
 docker run --rm -p 8080:8080 \
@@ -110,7 +112,33 @@ docker run --rm -p 8080:8080 \
   mecanica-hermes-cadastros:dev
 ```
 
-Imagem pública: `mechermes/mecanica-hermes-cadastros`
+Imagem pública: `mechermes/mecanica-hermes-api-cadastros`
+
+### Stack completa via Docker Compose
+
+O `docker-compose.yml` da stack inteira do ecossistema Mecânica Hermes — Postgres,
+MongoDB (com replica set), RabbitMQ (com plugin de delayed exchange), WireMock (mock
+do Mercado Pago) e as 3 APIs (`api-ordem-servico`, `api-cadastros`, `api-pagamentos`)
+— **vive no repositório de testes E2E**,
+[`mecanica-hermes-tests-e2e`](https://github.com/fiap-challenge-13soat/mecanica-hermes-tests-e2e).
+É a forma canônica de rodar o ecossistema localmente sem precisar buildar cada API:
+
+```bash
+git clone https://github.com/fiap-challenge-13soat/mecanica-hermes-tests-e2e.git ../mecanica-hermes-tests-e2e
+cd ../mecanica-hermes-tests-e2e
+docker compose \
+  -f docker-compose/docker-compose.yaml \
+  -f docker-compose/docker-compose.e2e.yaml \
+  up -d --wait
+```
+
+A imagem desta API consumida pelo compose vem do Docker Hub
+(`mechermes/mecanica-hermes-api-cadastros:latest`), republicada automaticamente pelo
+workflow [`Build and Publish Docker Image`](./.github/workflows/docker-ci.yml) a cada
+merge na `main`. Para apontar para uma tag específica, exporte
+`CADASTROS_IMAGE_TAG=<sha-curto-ou-versão>` antes do `compose up`.
+
+A suíte E2E que valida os fluxos cross-service entre as 3 APIs também vive lá.
 
 ## Integrações
 
