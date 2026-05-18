@@ -107,10 +107,10 @@ app.UseCorrelationId();
 app.UseGlobalExceptionHandler();
 app.UseCors("default");
 app.UseRateLimiter();
-app.MapOpenApi("/openapi/cadastros/v1.json");
-app.MapScalarApiReference(options => 
+app.MapOpenApi("/cadastros/openapi/v1.json");
+app.MapScalarApiReference("cadastros/scalar", options =>
 {
-    options.WithEndpoint("/openapi/cadastros/v1.json"); 
+    options.WithOpenApiRoutePattern("/cadastros/openapi/v1.json");
 });
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == EnvironmentNames.Testing)
 {
