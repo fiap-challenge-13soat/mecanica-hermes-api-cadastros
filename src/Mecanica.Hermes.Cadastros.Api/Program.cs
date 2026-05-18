@@ -110,7 +110,7 @@ app.UseRateLimiter();
 app.MapOpenApi("/openapi/cadastros/v1.json");
 app.MapScalarApiReference(options => 
 {
-    options.WithOpenApiRoute("/openapi/cadastros/v1.json"); 
+    options.WithEndpoint("/openapi/cadastros/v1.json"); 
 });
 if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == EnvironmentNames.Testing)
 {
