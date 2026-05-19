@@ -15,7 +15,7 @@ using Mecanica.Hermes.Shared.Core;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.OpenApi;
 using Scalar.AspNetCore;
 using IPNetwork = System.Net.IPNetwork;
 
@@ -35,7 +35,7 @@ builder.Services.AddOpenApi(options =>
     if (!string.IsNullOrEmpty(publicUrl))
         options.AddDocumentTransformer((document, context, ct) =>
         {
-            document.Servers = [new OpenApiServer { Url = publicUrl.TrimEnd('/') }];
+            document.Servers = [new() { Url = publicUrl.TrimEnd('/') }];
             return Task.CompletedTask;
         });
 });
