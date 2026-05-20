@@ -38,6 +38,8 @@ public sealed class AuthorizationTestWebApplicationFactory
         Environment.SetEnvironmentVariable("AUTH__ISSUER", TestIssuer);
         Environment.SetEnvironmentVariable("RUN_MIGRATIONS_ON_STARTUP", "false");
         Environment.SetEnvironmentVariable("EmailSender__Enabled", "false");
+        // Default mudou para AmazonMq em prod; testes precisam de in-memory transport.
+        Environment.SetEnvironmentVariable("MASSTRANSIT__TRANSPORT_SERVICE", "None");
 
         builder.ConfigureServices(services =>
         {

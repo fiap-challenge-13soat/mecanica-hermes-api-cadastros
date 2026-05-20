@@ -46,8 +46,8 @@ Todas as variáveis usam **double-underscore** (`__`) para mapeamento ASP.NET Co
 
 | Variável | Default | Obrigatório | Notas |
 | --- | --- | --- | --- |
-| `MASSTRANSIT__TRANSPORT_SERVICE` | `""` (in-memory) | Não | `RabbitMq` para usar broker real |
-| `MASSTRANSIT__CONNECTION_STRING` | — | Se RabbitMq | URI AMQP. Ex.: `amqp://guest:guest@localhost:5672` |
+| `MASSTRANSIT__TRANSPORT_SERVICE` | `AmazonMq` (quando ausente) | Não | `AmazonMq` (default, broker gerenciado AWS), `RabbitMq` (auto-hospedado), `None` (in-memory para testes). |
+| `MASSTRANSIT__CONNECTION_STRING` | — | Se `AmazonMq` ou `RabbitMq` | AmazonMq: `amqps://user:pass@broker-id.mq.<region>.amazonaws.com:5671`. RabbitMq: `amqp://guest:guest@localhost:5672/` |
 | `MASSTRANSIT__QUEUE_NAME_PREFIX` | `mecanica-hermes-cadastros` | Não | Prefixo de todas as filas/exchanges |
 
 ## HTTP Clients externos
@@ -92,8 +92,12 @@ export AUTH__ISSUER=https://test
 export EmailSender__Enabled=false
 export WEBHOOK__SIGNING_SECRET=meu-segredo-de-32-bytes-ou-mais-aqui
 export APP__BASE_URL=http://localhost:5000
+# Dev local com RabbitMQ em container:
 export MASSTRANSIT__TRANSPORT_SERVICE=RabbitMq
 export MASSTRANSIT__CONNECTION_STRING=amqp://guest:guest@localhost:5672
+# Em produção (default): aponta para Amazon MQ via AMQPS sobre TLS.
+# export MASSTRANSIT__TRANSPORT_SERVICE=AmazonMq
+# export MASSTRANSIT__CONNECTION_STRING=amqps://mechermes:****@b-xxx.mq.us-east-1.amazonaws.com:5671
 export ORDEM_SERVICO_API__BASE_URL=http://localhost:5001
 export PAGAMENTO_API__BASE_URL=http://localhost:5002
 ```
