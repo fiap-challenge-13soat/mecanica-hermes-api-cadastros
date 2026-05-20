@@ -74,7 +74,8 @@ public class ArchitectureTests
             .ShouldNot().HaveDependencyOn(ApiNamespace)
             .GetResult();
 
-        result.IsSuccessful.Should().BeTrue($"Application não deve depender de Api. Violações: {Violations(result)}");
+        result.IsSuccessful.Should()
+            .BeTrue($"Application não deve depender de Api. Violações: {Violations(result)}");
     }
 
     [Fact]
