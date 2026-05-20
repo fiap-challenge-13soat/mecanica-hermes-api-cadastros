@@ -47,7 +47,7 @@ Todas as variáveis usam **double-underscore** (`__`) para mapeamento ASP.NET Co
 | Variável | Default | Obrigatório | Notas |
 | --- | --- | --- | --- |
 | `MASSTRANSIT__TRANSPORT_SERVICE` | `AmazonMq` (quando ausente) | Não | `AmazonMq` (default, broker gerenciado AWS), `RabbitMq` (auto-hospedado), `None` (in-memory para testes). |
-| `MASSTRANSIT__CONNECTION_STRING` | — | Se `AmazonMq` ou `RabbitMq` | AmazonMq: `amqps://user:pass@broker-id.mq.<region>.amazonaws.com:5671`. RabbitMq: `amqp://guest:guest@localhost:5672/` |
+| `MASSTRANSIT__CONNECTION_STRING` | — | Se `AmazonMq` ou `RabbitMq` | AmazonMq: `amqps://<user>:<password>@<broker-id>.mq.<region>.amazonaws.com:5671`. RabbitMq: `amqp://<user>:<password>@<host>:5672/`. Credenciais via Secret Manager / Kubernetes Secret. |
 | `MASSTRANSIT__QUEUE_NAME_PREFIX` | `mecanica-hermes-cadastros` | Não | Prefixo de todas as filas/exchanges |
 
 ## HTTP Clients externos

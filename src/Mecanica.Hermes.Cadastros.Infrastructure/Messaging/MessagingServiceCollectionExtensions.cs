@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Authentication;
 using MassTransit;
 using Mecanica.Hermes.Cadastros.Infrastructure.HealthChecks;
 using Mecanica.Hermes.Cadastros.Infrastructure.Messaging.Consumers;
@@ -85,11 +84,9 @@ internal static class MessagingServiceCollectionExtensions
 
         x.UsingRabbitMq((context, cfg) =>
         {
-            cfg.Host(new Uri(connectionString), h =>
-            {
-                h.Heartbeat(AmazonMqHeartbeat);
-                h.UseSsl(s => s.Protocol = SslProtocols.Tls12);
-            });
+            // SSL é ativado automaticamente quando o esquema é `amqps://`; protocolo TLS é
+            // delegado ao .NET runtime / OS.
+            cfg.Host(new Uri(connectionString), h => h.Heartbeat(AmazonMqHeartbeat));
             cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(2)));
             cfg.ConnectConsumeObserver(context.GetRequiredService<MessagingFaultObserver>());
             cfg.ConfigureEndpoints(context);
