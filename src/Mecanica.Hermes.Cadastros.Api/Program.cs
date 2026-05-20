@@ -14,8 +14,8 @@ using Mecanica.Hermes.Shared.AspNetCore.Middleware;
 using Mecanica.Hermes.Shared.Core;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.OpenApi;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 using IPNetwork = System.Net.IPNetwork;
 
