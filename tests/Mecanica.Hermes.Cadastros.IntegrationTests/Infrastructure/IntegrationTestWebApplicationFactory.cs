@@ -24,6 +24,8 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Progra
 
         Environment.SetEnvironmentVariable("ConnectionStrings__DefaultConnection", _dbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("EmailSender__Enabled", "false");
+        // Default mudou para AmazonMq em prod; testes precisam de in-memory transport.
+        Environment.SetEnvironmentVariable("MASSTRANSIT__TRANSPORT_SERVICE", "None");
 
         _ = CreateClient();
 
